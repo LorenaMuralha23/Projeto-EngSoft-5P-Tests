@@ -8,6 +8,7 @@ import com.mycompany.demo.view.Panels.LoginPanel;
 import jakarta.annotation.PostConstruct;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +19,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class MainFrame extends javax.swing.JFrame {
 
-    private final LoginPanel loginPanel;
+    @Autowired
+    private LoginPanel loginPanel;
 
     public MainFrame() {
-        this.loginPanel = new LoginPanel();
         initComponents();
     }
 

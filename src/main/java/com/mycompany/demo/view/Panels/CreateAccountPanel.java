@@ -7,13 +7,15 @@ package com.mycompany.demo.view.Panels;
 import com.mycompany.demo.controller.UserController;
 import com.mycompany.demo.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CreateAccountPanel extends javax.swing.JPanel {
     
+    @Autowired
     private UserController userController;
     
     public CreateAccountPanel() {
-        this.userController = new UserController();
         initComponents();
     }
 

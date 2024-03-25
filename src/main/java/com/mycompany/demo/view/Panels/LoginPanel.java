@@ -2,19 +2,18 @@ package com.mycompany.demo.view.Panels;
 
 import com.mycompany.demo.EcommerceT1LpApplication;
 import com.mycompany.demo.view.MainFrame;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LoginPanel extends javax.swing.JPanel {
 
-    /**
-     * Creates new form LoginPanel
-     */
+    @Autowired
+    CreateAccountPanel crtAccPanel;
+    
     public LoginPanel() {
         initComponents();
     }
-
-    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -106,7 +105,6 @@ public class LoginPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void createAccBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createAccBtnMouseClicked
-        CreateAccountPanel crtAccPanel = new CreateAccountPanel();
         EcommerceT1LpApplication.mainFrame.changeWindow(crtAccPanel, this);
     }//GEN-LAST:event_createAccBtnMouseClicked
 
