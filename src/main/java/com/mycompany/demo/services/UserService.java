@@ -5,6 +5,7 @@ import com.mycompany.demo.entities.User;
 import com.mycompany.demo.repositories.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import javax.swing.JOptionPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,23 +28,22 @@ public class UserService {
     }
 
     public User insert(User newUser) {
-
         boolean sameUsername = repository.existsByUsername(newUser.getUsername());
         boolean sameEmail = repository.existsByEmail(newUser.getEmail());
+        boolean validEmailFormat = validator.isValidEmail(newUser.getEmail());
 
         if (!sameUsername && !sameEmail) {
-            System.out.println(validator.emailPatternMatches(newUser.getEmail()));
-            if (validator.emailPatternMatches(newUser.getEmail())) {
+            if (validEmailFormat) {
                 return repository.save(newUser);
-            }else{
-                System.out.println("Invalid email format");
+            } else {
+                throw new IllegalArgumentException("Invalid email format");
             }
 
         } else {
             if (sameUsername) {
-                System.out.println("Username provided is already in use. Try again");
+                throw new IllegalArgumentException("Username provided is already in use. Try again");
             } else if (sameEmail) {
-                System.out.println("Email provided is already in use. Try again");
+                throw new IllegalArgumentException("Email provided is already in use. Try again");
             }
         }
 
@@ -61,6 +61,23 @@ public class UserService {
         entity.setUsername(obj.getUsername());
         entity.setEmail(obj.getEmail());
         entity.setPhone(obj.getPhone());
+    }
+
+    public void logIn(String email, String password) {
+        Optional<User> userOptional = repository.findByEmail(email);
+
+        if (userOptional.isPresent()) {
+            User findedUser = userOptional.get();
+            
+            if (findedUser.getPassword().equals(password)) {
+                JOptionPane.showMessageDialog(null, "Deu certo!");
+            }else{
+                throw new IllegalArgumentException("Incorrect password");
+            }
+
+        }else{
+            throw new IllegalArgumentException("User not found");
+        }
     }
 
 }

@@ -10,12 +10,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ValidatorController {
 
-    private String emailRegex = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\\\.[A-Za-z0-9-]+)*(\\\\.[A-Za-z]{2,})$";
+    private static final String EMAIL_REGEX = "^(?!.*\\.\\.)[A-Za-z0-9_]+(?:\\.[A-Za-z0-9_]+)*@[A-Za-z0-9-]+(?:\\.[A-Za-z0-9-]+)*$";
 
-    public boolean emailPatternMatches(String emailAddress) {
-        return Pattern.compile(this.emailRegex)
-                .matcher(emailAddress)
-                .matches();
+    public boolean isValidEmail(String email) {
+        return Pattern.compile(EMAIL_REGEX).matcher(email).matches();
     }
 
 }

@@ -1,5 +1,7 @@
 package com.mycompany.demo;
 
+import com.mycompany.demo.entities.User;
+import com.mycompany.demo.repositories.UserRepository;
 import com.mycompany.demo.view.MainFrame;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -23,4 +25,6 @@ public class EcommerceT1LpApplication {
         // Exibe a janela principal
         mainFrame.starting();
     }
+    
+  
 }

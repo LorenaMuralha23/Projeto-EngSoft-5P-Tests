@@ -4,9 +4,12 @@
  */
 package com.mycompany.demo.view;
 
+import com.mycompany.demo.controller.UserController;
+import com.mycompany.demo.view.Panels.CreateAccountPanel;
 import com.mycompany.demo.view.Panels.LoginPanel;
 import jakarta.annotation.PostConstruct;
 import java.awt.BorderLayout;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +23,11 @@ import org.springframework.stereotype.Component;
 public class MainFrame extends javax.swing.JFrame {
 
     @Autowired
-    private LoginPanel loginPanel;
+    public UserController userController;
+    
+    public LoginPanel loginPanel = new LoginPanel();
+    
+    public CreateAccountPanel crtAccPanel = new CreateAccountPanel();
 
     public MainFrame() {
         initComponents();
@@ -29,18 +36,18 @@ public class MainFrame extends javax.swing.JFrame {
     @PostConstruct
     public void starting() {
         this.setLayout(new BorderLayout());
-        
+
         this.add(this.loginPanel);
         this.pack();
-        
+
         setLocationRelativeTo(null); // Centraliza o JFrame na tela
         setVisible(true); // Torna o JFrame visível
     }
-    
-    public void changeWindow(JPanel newPanel, JPanel panelToRemove){
-        this.getContentPane().remove(panelToRemove);
-        this.add(newPanel);
-        this.pack();
+
+    public void changeWindow(JFrame window, JPanel panelToRemove, JPanel panelToAdd) {
+        window.getContentPane().remove(panelToRemove);
+        window.add(panelToAdd, BorderLayout.CENTER);
+        window.pack();
     }
 
     @SuppressWarnings("unchecked")

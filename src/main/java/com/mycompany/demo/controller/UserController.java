@@ -11,13 +11,15 @@ public class UserController {
     @Autowired
     private UserService service;
     
-    
-
     public UserController() {
     }
     
     public void createNewUser(User newUser){
-        User user = service.insert(newUser);
+        service.insert(newUser);
+    }
+    
+    public void login(String email, String password){
+        service.logIn(email, password);
     }
     
 }
