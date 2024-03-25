@@ -108,9 +108,8 @@ public class CreateAccountPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void crtAccButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_crtAccButtonMouseClicked
-        
         User user = new User();
-        user.setName(nameField.getText());
+        user.setUsername(nameField.getText());
         user.setEmail(emailField.getText());
         user.setPassword(passwordField.getText());
         user.setPhone(phoneField.getText());
