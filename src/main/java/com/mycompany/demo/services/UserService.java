@@ -1,5 +1,6 @@
 package com.mycompany.demo.services;
 
+import com.mycompany.demo.controller.SessionController;
 import com.mycompany.demo.controller.ValidatorController;
 import com.mycompany.demo.entities.User;
 import com.mycompany.demo.repositories.UserRepository;
@@ -71,12 +72,13 @@ public class UserService {
             
             if (findedUser.getPassword().equals(password)) {
                 JOptionPane.showMessageDialog(null, "Deu certo!");
+                SessionController.getInstance().logIn(findedUser);
             }else{
-                throw new IllegalArgumentException("Incorrect password");
+                JOptionPane.showMessageDialog(null, "Invalid password!");
             }
 
         }else{
-            throw new IllegalArgumentException("User not found");
+            JOptionPane.showMessageDialog(null, "User not found");
         }
     }
 
