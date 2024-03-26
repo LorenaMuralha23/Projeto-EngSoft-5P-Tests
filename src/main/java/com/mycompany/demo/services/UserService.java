@@ -2,6 +2,9 @@ package com.mycompany.demo.services;
 
 import com.mycompany.demo.controller.SessionController;
 import com.mycompany.demo.controller.ValidatorController;
+import com.mycompany.demo.entities.Cart;
+import com.mycompany.demo.entities.CartItem;
+import com.mycompany.demo.entities.Product;
 import com.mycompany.demo.entities.User;
 import com.mycompany.demo.repositories.UserRepository;
 import java.util.List;
@@ -64,7 +67,7 @@ public class UserService {
         entity.setPhone(obj.getPhone());
     }
 
-    public void logIn(String email, String password) {
+    public boolean logIn(String email, String password) {
         Optional<User> userOptional = repository.findByEmail(email);
 
         if (userOptional.isPresent()) {
@@ -73,6 +76,7 @@ public class UserService {
             if (findedUser.getPassword().equals(password)) {
                 JOptionPane.showMessageDialog(null, "Deu certo!");
                 SessionController.getInstance().logIn(findedUser);
+                return true;
             }else{
                 JOptionPane.showMessageDialog(null, "Invalid password!");
             }
@@ -80,6 +84,9 @@ public class UserService {
         }else{
             JOptionPane.showMessageDialog(null, "User not found");
         }
+        
+        return false;
     }
-
+    
+    
 }

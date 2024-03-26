@@ -102,9 +102,14 @@ public class LoginPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_createAccBtnMouseClicked
 
     private void loginBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginBtnMouseClicked
+        JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
         String email = emailField.getText();
         String password = passwordField.getText();
-        EcommerceT1LpApplication.mainFrame.userController.login(email, password);
+        boolean logIn = EcommerceT1LpApplication.mainFrame.userController.login(email, password);
+        
+        if (logIn){
+            EcommerceT1LpApplication.mainFrame.changeWindow(window, this, EcommerceT1LpApplication.mainFrame.homePanel);
+        }
     }//GEN-LAST:event_loginBtnMouseClicked
 
 

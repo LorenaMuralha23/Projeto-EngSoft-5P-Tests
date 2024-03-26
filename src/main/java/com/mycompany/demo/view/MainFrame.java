@@ -4,8 +4,11 @@
  */
 package com.mycompany.demo.view;
 
+import com.mycompany.demo.controller.CartController;
+import com.mycompany.demo.controller.ProductController;
 import com.mycompany.demo.controller.UserController;
 import com.mycompany.demo.view.Panels.CreateAccountPanel;
+import com.mycompany.demo.view.Panels.HomePanel;
 import com.mycompany.demo.view.Panels.LoginPanel;
 import jakarta.annotation.PostConstruct;
 import java.awt.BorderLayout;
@@ -25,9 +28,17 @@ public class MainFrame extends javax.swing.JFrame {
     @Autowired
     public UserController userController;
     
+    @Autowired
+    public CartController cartController;
+    
+    @Autowired
+    public ProductController productController;
+    
     public LoginPanel loginPanel = new LoginPanel();
     
     public CreateAccountPanel crtAccPanel = new CreateAccountPanel();
+    
+    public HomePanel homePanel = new HomePanel();
 
     public MainFrame() {
         initComponents();

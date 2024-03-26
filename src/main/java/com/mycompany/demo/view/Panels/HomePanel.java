@@ -4,6 +4,10 @@
  */
 package com.mycompany.demo.view.Panels;
 
+import com.mycompany.demo.EcommerceT1LpApplication;
+import com.mycompany.demo.entities.Product;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author alunolages
@@ -30,9 +34,12 @@ public class HomePanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        addToCart1 = new javax.swing.JButton();
+        addToCart2 = new javax.swing.JButton();
+        addToCart3 = new javax.swing.JButton();
+        quantity1 = new javax.swing.JSpinner();
+        quantity2 = new javax.swing.JSpinner();
+        quantity3 = new javax.swing.JSpinner();
 
         jButton1.setText("See cart");
 
@@ -42,11 +49,28 @@ public class HomePanel extends javax.swing.JPanel {
 
         jLabel3.setText("Item3");
 
-        jButton2.setText("Add to Cart");
+        addToCart1.setText("Add to Cart");
+        addToCart1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addToCart1MouseClicked(evt);
+            }
+        });
 
-        jButton3.setText("Add to Cart");
+        addToCart2.setText("Add to Cart");
+        addToCart2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addToCart2MouseClicked(evt);
+            }
+        });
 
-        jButton4.setText("Add to Cart");
+        addToCart3.setText("Add to Cart");
+        addToCart3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addToCart3MouseClicked(evt);
+            }
+        });
+
+        quantity1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -67,11 +91,18 @@ public class HomePanel extends javax.swing.JPanel {
                         .addComponent(jLabel3))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(78, 78, 78)
-                        .addComponent(jButton2)
+                        .addComponent(addToCart1)
                         .addGap(107, 107, 107)
-                        .addComponent(jButton3)
+                        .addComponent(addToCart2)
                         .addGap(97, 97, 97)
-                        .addComponent(jButton4)))
+                        .addComponent(addToCart3))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(111, 111, 111)
+                        .addComponent(quantity1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(168, 168, 168)
+                        .addComponent(quantity2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(159, 159, 159)
+                        .addComponent(quantity3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(260, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -84,23 +115,49 @@ public class HomePanel extends javax.swing.JPanel {
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 240, Short.MAX_VALUE)
+                    .addComponent(addToCart1)
+                    .addComponent(addToCart2)
+                    .addComponent(addToCart3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(quantity1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(quantity2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(quantity3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void addToCart1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addToCart1MouseClicked
+        int quantity = (int) quantity1.getValue();
+        addToCart(EcommerceT1LpApplication.mainFrame.productController.findById(1l), quantity);
+    }//GEN-LAST:event_addToCart1MouseClicked
+
+    private void addToCart2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addToCart2MouseClicked
+        int quantity = (int) quantity2.getValue();
+        addToCart(EcommerceT1LpApplication.mainFrame.productController.findById(2l), quantity);
+    }//GEN-LAST:event_addToCart2MouseClicked
+
+    private void addToCart3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addToCart3MouseClicked
+        int quantity = (int) quantity3.getValue();
+        addToCart(EcommerceT1LpApplication.mainFrame.productController.findById(3l), quantity);
+    }//GEN-LAST:event_addToCart3MouseClicked
+
+    public void addToCart(Product product, Integer quantity) {
+        EcommerceT1LpApplication.mainFrame.cartController.addProductToCart(product, quantity);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addToCart1;
+    private javax.swing.JButton addToCart2;
+    private javax.swing.JButton addToCart3;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JSpinner quantity1;
+    private javax.swing.JSpinner quantity2;
+    private javax.swing.JSpinner quantity3;
     // End of variables declaration//GEN-END:variables
 }

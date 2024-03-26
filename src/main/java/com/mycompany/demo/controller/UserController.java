@@ -1,5 +1,6 @@
 package com.mycompany.demo.controller;
 
+import com.mycompany.demo.entities.Product;
 import com.mycompany.demo.entities.User;
 import com.mycompany.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,10 @@ public class UserController {
         service.insert(newUser);
     }
     
-    public void login(String email, String password){
-        service.logIn(email, password);
+    public boolean login(String email, String password){
+        return service.logIn(email, password);
     }
+    
+    
     
 }
