@@ -88,5 +88,8 @@ public class UserService {
         return false;
     }
     
+    public User getUserLogged(){
+        return SessionController.getInstance().getUserLogged();
+    }
     
 }

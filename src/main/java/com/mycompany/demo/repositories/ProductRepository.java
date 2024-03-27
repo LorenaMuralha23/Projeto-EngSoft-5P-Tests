@@ -5,9 +5,12 @@
 package com.mycompany.demo.repositories;
 
 import com.mycompany.demo.entities.Product;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+    Optional<Product> findByName(String name);
+    
 }

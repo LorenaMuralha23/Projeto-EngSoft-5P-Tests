@@ -23,9 +23,9 @@ public class CartService {
 
     @Autowired
     CartRepository repository;
-    
+
     @Autowired
-    CartItemRepository itemRepository; 
+    CartItemRepository itemRepository;
 
     public CartService() {
     }
@@ -46,6 +46,36 @@ public class CartService {
         CartItem item = new CartItem(cart, product, quantity, product.getPrice());
         cart.getItems().add(item);
         itemRepository.save(item);
+    }
+
+    public Optional<CartItem> getCartItemById(Integer id) {
+        return itemRepository.findById(id);
+    }
+
+    public void cleanCart() {
+        itemRepository.deleteAll();
+        SessionController.getInstance().getUserLogged().getCart().getItems().clear();
+    }
+
+    public void deleteItem(Product productToDelete) {
+        Optional<CartItem> obj = itemRepository.findByProductId(productToDelete.getId());
+        CartItem item = obj.orElse(null);
+        if (item != null) {
+            for (CartItem i : SessionController.getInstance().getUserLogged().getCart().getItems()) {
+                System.out.println(i.getProduct().getName());
+                if (i.getProduct().getId().equals(productToDelete.getId())) {
+                    SessionController.getInstance().getUserLogged().getCart().getItems().remove(item); // Remove o item do conjunto
+                    itemRepository.deleteByProductId(productToDelete.getId()); // Exclui o item do banco de dados
+                    break; // Encerra o loop assim que o item for removido
+                }
+            }
+            System.out.println("");
+            for (CartItem i : SessionController.getInstance().getUserLogged().getCart().getItems()) {
+                System.out.println(i.getProduct().getName());
+            }
+            
+            itemRepository.deleteByProductId(productToDelete.getId());
+        }
     }
 
 }

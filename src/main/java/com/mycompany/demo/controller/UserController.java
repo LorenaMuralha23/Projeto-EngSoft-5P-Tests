@@ -23,6 +23,9 @@ public class UserController {
         return service.logIn(email, password);
     }
     
+    public User getUserLogged(){
+        return service.getUserLogged();
+    }
     
     
 }

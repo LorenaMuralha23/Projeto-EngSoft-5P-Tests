@@ -35,4 +35,8 @@ public class ProductController {
     public Product createInstace(String name, String description, Double price, String imgUrl){
         return service.createInstance(name, description, price, imgUrl);
     }
+    
+    public Optional<Product> getProductByName(String productName){
+        return service.getProductByName(productName);
+    }
 }

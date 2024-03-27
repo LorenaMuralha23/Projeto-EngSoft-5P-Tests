@@ -30,4 +30,8 @@ public class ProductService {
         insert(product);
         return product;
     }
+    
+    public Optional<Product> getProductByName(String name){
+        return repository.findByName(name);
+    }
 }

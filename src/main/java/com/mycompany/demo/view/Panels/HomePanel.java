@@ -32,7 +32,7 @@ public class HomePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        seeCartBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -43,10 +43,10 @@ public class HomePanel extends javax.swing.JPanel {
         quantity2 = new javax.swing.JSpinner();
         quantity3 = new javax.swing.JSpinner();
 
-        jButton1.setText("See cart");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        seeCartBtn.setText("See cart");
+        seeCartBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                seeCartBtnMouseClicked(evt);
             }
         });
 
@@ -85,7 +85,7 @@ public class HomePanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(seeCartBtn)
                 .addGap(47, 47, 47))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,7 +131,7 @@ public class HomePanel extends javax.swing.JPanel {
                     .addComponent(quantity2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(quantity3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(seeCartBtn)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -151,10 +151,11 @@ public class HomePanel extends javax.swing.JPanel {
         addToCart(EcommerceT1LpApplication.mainFrame.productController.findById(3l), quantity);
     }//GEN-LAST:event_addToCart3MouseClicked
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void seeCartBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_seeCartBtnMouseClicked
         JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
         EcommerceT1LpApplication.mainFrame.changeWindow(window, this, EcommerceT1LpApplication.mainFrame.cartPanel);
-    }//GEN-LAST:event_jButton1MouseClicked
+        EcommerceT1LpApplication.mainFrame.cartPanel.startTable();
+    }//GEN-LAST:event_seeCartBtnMouseClicked
 
     public void addToCart(Product product, Integer quantity) {
         EcommerceT1LpApplication.mainFrame.cartController.addProductToCart(product, quantity);
@@ -164,12 +165,12 @@ public class HomePanel extends javax.swing.JPanel {
     private javax.swing.JButton addToCart1;
     private javax.swing.JButton addToCart2;
     private javax.swing.JButton addToCart3;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JSpinner quantity1;
     private javax.swing.JSpinner quantity2;
     private javax.swing.JSpinner quantity3;
+    private javax.swing.JButton seeCartBtn;
     // End of variables declaration//GEN-END:variables
 }
