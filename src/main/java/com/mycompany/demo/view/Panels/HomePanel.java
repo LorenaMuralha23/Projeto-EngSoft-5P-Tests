@@ -6,7 +6,9 @@ package com.mycompany.demo.view.Panels;
 
 import com.mycompany.demo.EcommerceT1LpApplication;
 import com.mycompany.demo.entities.Product;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -42,6 +44,11 @@ public class HomePanel extends javax.swing.JPanel {
         quantity3 = new javax.swing.JSpinner();
 
         jButton1.setText("See cart");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
 
         jLabel1.setText("Item1");
 
@@ -143,6 +150,11 @@ public class HomePanel extends javax.swing.JPanel {
         int quantity = (int) quantity3.getValue();
         addToCart(EcommerceT1LpApplication.mainFrame.productController.findById(3l), quantity);
     }//GEN-LAST:event_addToCart3MouseClicked
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
+        EcommerceT1LpApplication.mainFrame.changeWindow(window, this, EcommerceT1LpApplication.mainFrame.cartPanel);
+    }//GEN-LAST:event_jButton1MouseClicked
 
     public void addToCart(Product product, Integer quantity) {
         EcommerceT1LpApplication.mainFrame.cartController.addProductToCart(product, quantity);

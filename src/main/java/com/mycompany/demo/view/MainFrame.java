@@ -7,6 +7,7 @@ package com.mycompany.demo.view;
 import com.mycompany.demo.controller.CartController;
 import com.mycompany.demo.controller.ProductController;
 import com.mycompany.demo.controller.UserController;
+import com.mycompany.demo.view.Panels.CartPanel;
 import com.mycompany.demo.view.Panels.CreateAccountPanel;
 import com.mycompany.demo.view.Panels.HomePanel;
 import com.mycompany.demo.view.Panels.LoginPanel;
@@ -39,6 +40,8 @@ public class MainFrame extends javax.swing.JFrame {
     public CreateAccountPanel crtAccPanel = new CreateAccountPanel();
     
     public HomePanel homePanel = new HomePanel();
+    
+    public CartPanel cartPanel = new CartPanel();
 
     public MainFrame() {
         initComponents();
