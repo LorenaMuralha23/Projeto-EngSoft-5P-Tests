@@ -1,5 +1,6 @@
 package com.mycompany.demo.entities;
 
+import jakarta.persistence.CascadeType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -22,15 +24,18 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
+    private String name;
     private String email;
     private String phone;
     private String password;
-////
+
+    @OneToOne(mappedBy = "user")
+    private Address address;
+
     @OneToMany(mappedBy = "client")
     private List<Order> orders = new ArrayList<>();
-    
-    @OneToOne(mappedBy = "client")
+
+    @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
     private Cart cart;
 
     public User() {
@@ -40,12 +45,11 @@ public class User implements Serializable {
     public User(Long id, String name, String email, String phone, String password) {
         super();
         this.id = id;
-        this.username = name;
+        this.name = name;
         this.email = email;
         this.phone = phone;
         this.password = password;
     }
-    
 
     public Long getId() {
         return id;
@@ -55,12 +59,12 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String name) {
-        this.username = name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -90,19 +94,23 @@ public class User implements Serializable {
     public List<Order> getOrders() {
         return orders;
     }
-    
-    public void setCart(Cart cart){
+
+    public void setCart(Cart cart) {
         this.cart = cart;
     }
-    
-    public Cart getCart(){
+
+    public Cart getCart() {
         return this.cart;
     }
-    
-    public void removeItem(CartItem itemToRemove){
-        
+
+    public Address getAddress() {
+        return address;
     }
-    
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);

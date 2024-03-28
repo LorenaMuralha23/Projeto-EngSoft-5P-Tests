@@ -22,6 +22,22 @@ public enum OrderStatus {
         return code;
     }
 
+    public String getCodeString(){
+        switch (this.code) {
+            case 1:
+                return "Waiting Payment";
+            case 2:
+                return "Paid";
+            case 3:
+                return "Shipped";
+            case 4:
+                return "Delivered";
+            case 5:
+                return "Canceled";
+        }
+        return null;
+    }
+    
     public static OrderStatus valueOf(int code) {
         for (OrderStatus value : OrderStatus.values()) {
             if (value.getCode() == code) {

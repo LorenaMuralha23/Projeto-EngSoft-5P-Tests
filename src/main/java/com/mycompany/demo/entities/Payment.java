@@ -24,30 +24,33 @@ public class Payment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private Instant moment;
 
     @OneToOne
     @MapsId
     private Order order;
+    
+    private Integer type;
 
     public Payment() {
 
     }
 
-    public Payment(Long id, Instant moment, Order order) {
+    public Payment(Integer id, Instant moment, Order order, Integer type) {
         super();
         this.id = id;
         this.moment = moment;
         this.order = order;
+        this.type = type;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

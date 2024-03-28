@@ -1,5 +1,6 @@
 package com.mycompany.demo.controller;
 
+import com.mycompany.demo.entities.Address;
 import com.mycompany.demo.entities.Cart;
 import com.mycompany.demo.entities.CartItem;
 import com.mycompany.demo.entities.Product;
@@ -32,5 +33,9 @@ public class UserController {
     
     public Set<CartItem> getUserCartItems(){
         return service.getUserCart();
+    }
+    
+    public Address getAddress(){
+        return service.getAddress();
     }
 }

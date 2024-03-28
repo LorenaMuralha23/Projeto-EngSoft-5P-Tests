@@ -7,12 +7,15 @@ package com.mycompany.demo.services;
 import com.mycompany.demo.controller.SessionController;
 import com.mycompany.demo.entities.Cart;
 import com.mycompany.demo.entities.CartItem;
+import com.mycompany.demo.entities.Order;
 import com.mycompany.demo.entities.OrderItem;
 import com.mycompany.demo.entities.Product;
 import com.mycompany.demo.entities.User;
+import com.mycompany.demo.entities.enums.OrderStatus;
 import com.mycompany.demo.entities.pk.CartItemPK;
 import com.mycompany.demo.repositories.CartItemRepository;
 import com.mycompany.demo.repositories.CartRepository;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
 import javax.swing.JOptionPane;
@@ -65,10 +68,10 @@ public class CartService {
             itemRepository.deleteByProductId(productToDelete.getId());
             removeCartItem(SessionController.getInstance().getUserLogged(), item);
         }
-        System.out.println("Número de items: "+ SessionController.getInstance().getUserLogged().getCart().getItems().size());
-        
-    }  
-    
+        System.out.println("Número de items: " + SessionController.getInstance().getUserLogged().getCart().getItems().size());
+
+    }
+
     public void removeCartItem(User user, CartItem itemToRemove) {
         // Obtém o carrinho do usuário
         Cart cart = user.getCart();
@@ -78,16 +81,36 @@ public class CartService {
             // Remove o item do carrinho
             System.out.println("O objeto esta presente!");
             boolean deleted = cart.getItems().remove(itemToRemove);
-            if (deleted){
+            if (deleted) {
                 System.out.println("Objeto deletado");
-            }else{
+            } else {
                 System.out.println("Sapoha nem chega :)");
             }
         }
     }
-    
-    public Double getSubtotal(){
+
+    public Double getSubtotal() {
         return SessionController.getInstance().getUserLogged().getCart().getSubtotal();
     }
-    
+
+    public Order covertCartToOrder() {
+        Order order = new Order(null, Instant.now(), OrderStatus.SHIPPED, SessionController.getInstance().getUserLogged()); //por agora, todos os orders terão o status de Shipped
+        User userLogged = SessionController.getInstance().getUserLogged();
+        for (CartItem item : userLogged.getCart().getItems()) {
+            OrderItem orderItem = new OrderItem(order, item.getProduct(), item.getQuantity(), item.getPrice());
+            order.getOrderItems().add(orderItem);
+        }
+        cleanCart();
+
+        return order;
+    }
+
+    public int calculateInstallments(double totalValue) {
+        double minInstallmentValue = 20.0;
+
+        int numInstallments = (int) Math.ceil(totalValue / minInstallmentValue);
+
+        return numInstallments;
+    }
+
 }

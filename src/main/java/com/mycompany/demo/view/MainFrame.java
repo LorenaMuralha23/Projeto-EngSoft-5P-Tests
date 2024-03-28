@@ -5,12 +5,15 @@
 package com.mycompany.demo.view;
 
 import com.mycompany.demo.controller.CartController;
+import com.mycompany.demo.controller.PaymentController;
 import com.mycompany.demo.controller.ProductController;
 import com.mycompany.demo.controller.UserController;
 import com.mycompany.demo.view.Panels.CartPanel;
 import com.mycompany.demo.view.Panels.CreateAccountPanel;
+import com.mycompany.demo.view.Panels.FinishedOrderPanel;
 import com.mycompany.demo.view.Panels.HomePanel;
 import com.mycompany.demo.view.Panels.LoginPanel;
+import com.mycompany.demo.view.Panels.OrderPanel;
 import jakarta.annotation.PostConstruct;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
@@ -28,20 +31,27 @@ public class MainFrame extends javax.swing.JFrame {
 
     @Autowired
     public UserController userController;
-    
+
     @Autowired
     public CartController cartController;
-    
+
     @Autowired
     public ProductController productController;
-    
+
+    @Autowired
+    public PaymentController paymentController;
+
     public LoginPanel loginPanel = new LoginPanel();
-    
+
     public CreateAccountPanel crtAccPanel = new CreateAccountPanel();
-    
+
     public HomePanel homePanel = new HomePanel();
-    
+
     public CartPanel cartPanel = new CartPanel();
+
+    public OrderPanel orderPanel = new OrderPanel();
+
+    public FinishedOrderPanel fshOrderPanel = new FinishedOrderPanel();
 
     public MainFrame() {
         initComponents();

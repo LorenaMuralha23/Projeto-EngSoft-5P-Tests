@@ -2,6 +2,7 @@ package com.mycompany.demo.services;
 
 import com.mycompany.demo.controller.SessionController;
 import com.mycompany.demo.controller.ValidatorController;
+import com.mycompany.demo.entities.Address;
 import com.mycompany.demo.entities.Cart;
 import com.mycompany.demo.entities.CartItem;
 import com.mycompany.demo.entities.Product;
@@ -33,7 +34,7 @@ public class UserService {
     }
 
     public User insert(User newUser) {
-        boolean sameUsername = repository.existsByUsername(newUser.getUsername());
+        boolean sameUsername = repository.existsByName(newUser.getName());
         boolean sameEmail = repository.existsByEmail(newUser.getEmail());
         boolean validEmailFormat = validator.isValidEmail(newUser.getEmail());
 
@@ -63,7 +64,7 @@ public class UserService {
     }
 
     private void updateData(User entity, User obj) {
-        entity.setUsername(obj.getUsername());
+        entity.setName(obj.getName());
         entity.setEmail(obj.getEmail());
         entity.setPhone(obj.getPhone());
     }
@@ -95,5 +96,9 @@ public class UserService {
 
     public Set<CartItem> getUserCart(){
         return SessionController.getInstance().getUserLogged().getCart().getItems();
+    }
+    
+    public Address getAddress(){
+        return SessionController.getInstance().getUserLogged().getAddress();
     }
 }

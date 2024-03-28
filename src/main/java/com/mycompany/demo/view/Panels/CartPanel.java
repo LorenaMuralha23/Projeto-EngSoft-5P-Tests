@@ -4,6 +4,7 @@ import com.mycompany.demo.EcommerceT1LpApplication;
 import com.mycompany.demo.entities.CartItem;
 import com.mycompany.demo.entities.Product;
 import com.mycompany.demo.entities.User;
+import java.text.DecimalFormat;
 import java.util.Optional;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -25,7 +26,8 @@ public class CartPanel extends javax.swing.JPanel {
 
     public void startTable() {
         Double subtotal = EcommerceT1LpApplication.mainFrame.cartController.getSubtotal();
-        subTotalLabel.setText(String.valueOf(subtotal));
+        DecimalFormat df = new DecimalFormat("#.##");
+        subTotalLabel.setText(df.format(subtotal));
         User userLogged = EcommerceT1LpApplication.mainFrame.userController.getUserLogged();
 
         // Limpar a tabela antes de adicionar novos dados
@@ -163,12 +165,12 @@ public class CartPanel extends javax.swing.JPanel {
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         int choosedOptn = JOptionPane.showConfirmDialog(null, "Are you sure about that?\n" + "All the products in your cart will be removed");
-        
+
         if (choosedOptn == 0) {
             EcommerceT1LpApplication.mainFrame.cartController.cleanCart();
             startTable();
         }
-        
+
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void deleteItemBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteItemBtnMouseClicked
@@ -180,17 +182,21 @@ public class CartPanel extends javax.swing.JPanel {
             Optional<Product> obj = EcommerceT1LpApplication.mainFrame.productController.getProductByName(productName);
             Product productFinded = obj.orElse(null);
             EcommerceT1LpApplication.mainFrame.cartController.deleteItem(productFinded);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Select a product!");
         }
-        
-         startTable();
+
+        startTable();
     }//GEN-LAST:event_deleteItemBtnMouseClicked
 
     private void fecharPedidoBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fecharPedidoBtnMouseClicked
+
         if (!EcommerceT1LpApplication.mainFrame.userController.getUserCartItems().isEmpty()) {
-            
+            JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
+            EcommerceT1LpApplication.mainFrame.changeWindow(window, this, EcommerceT1LpApplication.mainFrame.orderPanel);
+            EcommerceT1LpApplication.mainFrame.orderPanel.startScreenInfo();
         }
+
     }//GEN-LAST:event_fecharPedidoBtnMouseClicked
 
 

@@ -5,6 +5,7 @@
 package com.mycompany.demo.controller;
 
 import com.mycompany.demo.entities.CartItem;
+import com.mycompany.demo.entities.Order;
 import com.mycompany.demo.entities.Product;
 import com.mycompany.demo.services.CartService;
 import java.util.Optional;
@@ -39,5 +40,13 @@ public class CartController {
     
     public Double getSubtotal(){
         return service.getSubtotal();
+    }
+    
+    public Order covertCartToOrder(){
+        return service.covertCartToOrder();
+    }
+    
+    public int calculateInstallments(double totalValue){
+        return service.calculateInstallments(SessionController.getInstance().getUserLogged().getCart().getSubtotal());
     }
 }
