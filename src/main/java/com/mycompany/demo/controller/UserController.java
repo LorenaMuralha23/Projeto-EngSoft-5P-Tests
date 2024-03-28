@@ -1,8 +1,11 @@
 package com.mycompany.demo.controller;
 
+import com.mycompany.demo.entities.Cart;
+import com.mycompany.demo.entities.CartItem;
 import com.mycompany.demo.entities.Product;
 import com.mycompany.demo.entities.User;
 import com.mycompany.demo.services.UserService;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,5 +30,7 @@ public class UserController {
         return service.getUserLogged();
     }
     
-    
+    public Set<CartItem> getUserCartItems(){
+        return service.getUserCart();
+    }
 }

@@ -36,4 +36,8 @@ public class CartController {
     public void deleteItem(Product product){
         service.deleteItem(product);
     }
+    
+    public Double getSubtotal(){
+        return service.getSubtotal();
+    }
 }

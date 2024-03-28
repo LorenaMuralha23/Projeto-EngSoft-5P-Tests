@@ -24,6 +24,8 @@ public class CartPanel extends javax.swing.JPanel {
     }
 
     public void startTable() {
+        Double subtotal = EcommerceT1LpApplication.mainFrame.cartController.getSubtotal();
+        subTotalLabel.setText(String.valueOf(subtotal));
         User userLogged = EcommerceT1LpApplication.mainFrame.userController.getUserLogged();
 
         // Limpar a tabela antes de adicionar novos dados
@@ -51,6 +53,9 @@ public class CartPanel extends javax.swing.JPanel {
         cartTable = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         deleteItemBtn = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        subTotalLabel = new javax.swing.JLabel();
+        fecharPedidoBtn = new javax.swing.JButton();
 
         jButton1.setText("Back");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -94,6 +99,17 @@ public class CartPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setText("Subtotal: R$");
+
+        subTotalLabel.setText("0,00");
+
+        fecharPedidoBtn.setText("Fechar Pedido");
+        fecharPedidoBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fecharPedidoBtnMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -105,22 +121,37 @@ public class CartPanel extends javax.swing.JPanel {
                 .addComponent(jButton2)
                 .addGap(73, 73, 73)
                 .addComponent(deleteItemBtn)
+                .addGap(61, 61, 61)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(subTotalLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(166, Short.MAX_VALUE)
+                .addContainerGap(136, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(147, 147, 147))
+                .addGap(28, 28, 28)
+                .addComponent(fecharPedidoBtn)
+                .addGap(42, 42, 42))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(deleteItemBtn))
+                .addContainerGap(24, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(fecharPedidoBtn)
+                        .addGap(32, 32, 32)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1)
+                        .addComponent(jButton2)
+                        .addComponent(deleteItemBtn))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(subTotalLabel)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -156,12 +187,21 @@ public class CartPanel extends javax.swing.JPanel {
          startTable();
     }//GEN-LAST:event_deleteItemBtnMouseClicked
 
+    private void fecharPedidoBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fecharPedidoBtnMouseClicked
+        if (!EcommerceT1LpApplication.mainFrame.userController.getUserCartItems().isEmpty()) {
+            
+        }
+    }//GEN-LAST:event_fecharPedidoBtnMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable cartTable;
     private javax.swing.JButton deleteItemBtn;
+    private javax.swing.JButton fecharPedidoBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel subTotalLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -85,6 +85,9 @@ public class CartService {
             }
         }
     }
-
-
+    
+    public Double getSubtotal(){
+        return SessionController.getInstance().getUserLogged().getCart().getSubtotal();
+    }
+    
 }

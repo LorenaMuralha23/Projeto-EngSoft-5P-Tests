@@ -9,6 +9,7 @@ import com.mycompany.demo.entities.User;
 import com.mycompany.demo.repositories.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.swing.JOptionPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,5 +93,7 @@ public class UserService {
         return SessionController.getInstance().getUserLogged();
     }
 
-    
+    public Set<CartItem> getUserCart(){
+        return SessionController.getInstance().getUserLogged().getCart().getItems();
+    }
 }

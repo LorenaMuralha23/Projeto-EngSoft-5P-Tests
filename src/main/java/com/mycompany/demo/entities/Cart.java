@@ -49,6 +49,14 @@ public class Cart {
     public Set<CartItem> getItems() {
         return items;
     }
+    
+    public Double getSubtotal(){
+        Double subtotal = 0.0;
+        for (CartItem i : this.items) {
+            subtotal += i.getPrice()*i.getQuantity();
+        }
+        return subtotal;
+    }
 
     @Override
     public int hashCode() {
