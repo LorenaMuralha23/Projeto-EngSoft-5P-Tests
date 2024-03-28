@@ -91,5 +91,6 @@ public class UserService {
     public User getUserLogged(){
         return SessionController.getInstance().getUserLogged();
     }
+
     
 }

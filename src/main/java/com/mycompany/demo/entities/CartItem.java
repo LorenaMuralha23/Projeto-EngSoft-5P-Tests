@@ -62,7 +62,7 @@ public class CartItem {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 53 * hash + Objects.hashCode(this.id);
+        hash = 89 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -81,7 +81,6 @@ public class CartItem {
         return Objects.equals(this.id, other.id);
     }
 
-    
     
     
     

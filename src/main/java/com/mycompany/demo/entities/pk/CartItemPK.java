@@ -38,6 +38,8 @@ public class CartItemPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 3;
+        hash = 29 * hash + Objects.hashCode(this.cart);
+        hash = 29 * hash + Objects.hashCode(this.product);
         return hash;
     }
 
@@ -58,6 +60,8 @@ public class CartItemPK implements Serializable {
         }
         return Objects.equals(this.product, other.product);
     }
+
+    
 
     
     

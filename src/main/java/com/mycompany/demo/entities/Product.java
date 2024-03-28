@@ -110,7 +110,10 @@ public class Product implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.id);
+        hash = 97 * hash + Objects.hashCode(this.name);
+        return hash;
     }
 
     @Override
@@ -118,11 +121,19 @@ public class Product implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof Product)) {
+        if (obj == null) {
             return false;
         }
-        Product other = (Product) obj;
-        return Objects.equals(id, other.id);
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Product other = (Product) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        return Objects.equals(this.id, other.id);
     }
+
+    
 
 }

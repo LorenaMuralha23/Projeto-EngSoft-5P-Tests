@@ -149,10 +149,11 @@ public class CartPanel extends javax.swing.JPanel {
             Optional<Product> obj = EcommerceT1LpApplication.mainFrame.productController.getProductByName(productName);
             Product productFinded = obj.orElse(null);
             EcommerceT1LpApplication.mainFrame.cartController.deleteItem(productFinded);
-            startTable();
         }else{
             JOptionPane.showMessageDialog(null, "Select a product!");
         }
+        
+         startTable();
     }//GEN-LAST:event_deleteItemBtnMouseClicked
 
 

@@ -14,6 +14,7 @@ import com.mycompany.demo.entities.pk.CartItemPK;
 import com.mycompany.demo.repositories.CartItemRepository;
 import com.mycompany.demo.repositories.CartRepository;
 import java.util.Optional;
+import java.util.Set;
 import javax.swing.JOptionPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,21 +62,29 @@ public class CartService {
         Optional<CartItem> obj = itemRepository.findByProductId(productToDelete.getId());
         CartItem item = obj.orElse(null);
         if (item != null) {
-            for (CartItem i : SessionController.getInstance().getUserLogged().getCart().getItems()) {
-                System.out.println(i.getProduct().getName());
-                if (i.getProduct().getId().equals(productToDelete.getId())) {
-                    SessionController.getInstance().getUserLogged().getCart().getItems().remove(item); // Remove o item do conjunto
-                    itemRepository.deleteByProductId(productToDelete.getId()); // Exclui o item do banco de dados
-                    break; // Encerra o loop assim que o item for removido
-                }
-            }
-            System.out.println("");
-            for (CartItem i : SessionController.getInstance().getUserLogged().getCart().getItems()) {
-                System.out.println(i.getProduct().getName());
-            }
-            
             itemRepository.deleteByProductId(productToDelete.getId());
+            removeCartItem(SessionController.getInstance().getUserLogged(), item);
+        }
+        System.out.println("Número de items: "+ SessionController.getInstance().getUserLogged().getCart().getItems().size());
+        
+    }  
+    
+    public void removeCartItem(User user, CartItem itemToRemove) {
+        // Obtém o carrinho do usuário
+        Cart cart = user.getCart();
+
+        // Verifica se o carrinho existe e se o item está presente no carrinho
+        if (cart != null && cart.getItems().contains(itemToRemove)) {
+            // Remove o item do carrinho
+            System.out.println("O objeto esta presente!");
+            boolean deleted = cart.getItems().remove(itemToRemove);
+            if (deleted){
+                System.out.println("Objeto deletado");
+            }else{
+                System.out.println("Sapoha nem chega :)");
+            }
         }
     }
+
 
 }

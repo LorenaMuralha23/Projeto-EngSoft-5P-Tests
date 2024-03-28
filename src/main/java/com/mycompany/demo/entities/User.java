@@ -99,6 +99,10 @@ public class User implements Serializable {
         return this.cart;
     }
     
+    public void removeItem(CartItem itemToRemove){
+        
+    }
+    
     @Override
     public int hashCode() {
         return Objects.hash(id);
