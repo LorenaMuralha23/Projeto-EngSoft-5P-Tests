@@ -13,10 +13,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserController {
         
-    @Autowired
-    private UserService service;
     
-    public UserController() {
+    private final UserService service;
+    
+    @Autowired
+    public UserController(UserService service) {
+        this.service = service;
     }
     
     public void createNewUser(User newUser){

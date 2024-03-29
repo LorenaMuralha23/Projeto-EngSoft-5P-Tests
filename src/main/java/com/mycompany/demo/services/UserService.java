@@ -95,6 +95,7 @@ public class UserService {
     }
 
     public Set<CartItem> getUserCart(){
+        System.out.println(SessionController.getInstance().getUserLogged().getCart().getItems());
         return SessionController.getInstance().getUserLogged().getCart().getItems();
     }
     

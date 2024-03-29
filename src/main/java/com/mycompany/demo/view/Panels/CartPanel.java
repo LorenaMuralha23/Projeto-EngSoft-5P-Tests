@@ -25,25 +25,30 @@ public class CartPanel extends javax.swing.JPanel {
     }
 
     public void startTable() {
-        Double subtotal = EcommerceT1LpApplication.mainFrame.cartController.getSubtotal();
-        DecimalFormat df = new DecimalFormat("#.##");
-        subTotalLabel.setText(df.format(subtotal));
         User userLogged = EcommerceT1LpApplication.mainFrame.userController.getUserLogged();
 
-        // Limpar a tabela antes de adicionar novos dados
-        model.setRowCount(0);
+        if (userLogged.getCart() != null) {
+            Double subtotal = EcommerceT1LpApplication.mainFrame.cartController.getSubtotal();
+            DecimalFormat df = new DecimalFormat("#.##");
+            subTotalLabel.setText(df.format(subtotal));
+            
+            // Limpar a tabela antes de adicionar novos dados
+            model.setRowCount(0);
 
-        for (CartItem item : userLogged.getCart().getItems()) {
-            // Criar um novo array de objetos para cada item do carrinho
-            Object[] rowData = new Object[2]; // Supondo que você tenha duas colunas: nome do produto e quantidade
+            for (CartItem item : userLogged.getCart().getItems()) {
+                // Criar um novo array de objetos para cada item do carrinho
+                Object[] rowData = new Object[2]; // Supondo que você tenha duas colunas: nome do produto e quantidade
 
-            // Adicionar os dados do item do carrinho ao array
-            rowData[0] = item.getProduct().getName();
-            rowData[1] = item.getQuantity();
+                // Adicionar os dados do item do carrinho ao array
+                rowData[0] = item.getProduct().getName();
+                rowData[1] = item.getQuantity();
 
-            // Adicionar a nova linha à tabela
-            model.addRow(rowData);
+                // Adicionar a nova linha à tabela
+                model.addRow(rowData);
+            }
+
         }
+
     }
 
     @SuppressWarnings("unchecked")
