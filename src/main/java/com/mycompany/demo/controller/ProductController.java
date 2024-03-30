@@ -32,7 +32,7 @@ public class ProductController {
         return null;
     }
     
-    public Product createInstace(String name, String description, Double price, String imgUrl){
+    public Product createInstance(String name, String description, Double price, String imgUrl){
         return service.createInstance(name, description, price, imgUrl);
     }
     

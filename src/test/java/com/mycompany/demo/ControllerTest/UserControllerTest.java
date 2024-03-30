@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
-package com.mycompany.demo.controller;
+package com.mycompany.demo.ControllerTest;
 
+import com.mycompany.demo.controller.UserController;
 import com.mycompany.demo.entities.Address;
 import com.mycompany.demo.entities.CartItem;
 import com.mycompany.demo.entities.User;

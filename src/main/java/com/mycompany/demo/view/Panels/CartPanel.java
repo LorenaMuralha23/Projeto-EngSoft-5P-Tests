@@ -1,11 +1,14 @@
 package com.mycompany.demo.view.Panels;
 
 import com.mycompany.demo.EcommerceT1LpApplication;
+import com.mycompany.demo.controller.SessionController;
 import com.mycompany.demo.entities.CartItem;
 import com.mycompany.demo.entities.Product;
 import com.mycompany.demo.entities.User;
 import java.text.DecimalFormat;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -172,7 +175,11 @@ public class CartPanel extends javax.swing.JPanel {
         int choosedOptn = JOptionPane.showConfirmDialog(null, "Are you sure about that?\n" + "All the products in your cart will be removed");
 
         if (choosedOptn == 0) {
-            EcommerceT1LpApplication.mainFrame.cartController.cleanCart();
+            try {
+                EcommerceT1LpApplication.mainFrame.cartController.cleanCart(SessionController.getInstance().getUserLogged());
+            } catch (Exception ex) {
+                Logger.getLogger(CartPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
             startTable();
         }
 

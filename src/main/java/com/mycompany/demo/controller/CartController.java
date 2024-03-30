@@ -7,6 +7,7 @@ package com.mycompany.demo.controller;
 import com.mycompany.demo.entities.CartItem;
 import com.mycompany.demo.entities.Order;
 import com.mycompany.demo.entities.Product;
+import com.mycompany.demo.entities.User;
 import com.mycompany.demo.services.CartService;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,36 +18,36 @@ public class CartController {
 
     @Autowired
     private CartService service;
-    
 
     public CartController() {
     }
 
-    public void addProductToCart(Product product, Integer quantity){
+    public void addProductToCart(Product product, Integer quantity) {
         service.addProductToCart(product, quantity);
     }
-    
-    public Optional<CartItem> getItem(Integer id){
+
+    public Optional<CartItem> getItem(Integer id) {
         return service.getCartItemById(id);
     }
-    
-    public void cleanCart(){
-        service.cleanCart();
+
+    public void cleanCart(User userLogged) {
+        service.cleanCart(userLogged);
     }
-    
-    public void deleteItem(Product product){
-        service.deleteItem(product);
+
+    public CartItem deleteItem(Product product) {
+        return service.deleteItem(product);
     }
-    
-    public Double getSubtotal(){
+
+    public Double getSubtotal() {
         return service.getSubtotal();
     }
-    
-    public Order covertCartToOrder(){
+
+    public Order covertCartToOrder() {
         return service.covertCartToOrder();
     }
-    
-    public int calculateInstallments(double totalValue){
-        return service.calculateInstallments(SessionController.getInstance().getUserLogged().getCart().getSubtotal());
+
+    public int calculateInstallments(double totalValue) {
+        return service.calculateInstallments(totalValue);
     }
+    
 }

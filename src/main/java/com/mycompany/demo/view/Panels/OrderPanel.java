@@ -1,6 +1,7 @@
 package com.mycompany.demo.view.Panels;
 
 import com.mycompany.demo.EcommerceT1LpApplication;
+import com.mycompany.demo.controller.SessionController;
 import com.mycompany.demo.entities.Order;
 import com.mycompany.demo.entities.Payment;
 import java.text.DecimalFormat;

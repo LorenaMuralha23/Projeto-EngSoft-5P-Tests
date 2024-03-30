@@ -34,8 +34,8 @@ public class CartService {
     public CartService() {
     }
 
-    public void createCart() {
-        Cart cart = new Cart(SessionController.getInstance().getUserLogged());
+    public void createCart(User userLogged) {
+        Cart cart = new Cart(userLogged);
         SessionController.getInstance().getUserLogged().setCart(cart);
         repository.save(cart);
     }
@@ -44,7 +44,7 @@ public class CartService {
         User userLogged = SessionController.getInstance().getUserLogged();
         Cart cart = userLogged.getCart();
         if (cart == null) {
-            createCart();
+            createCart(userLogged);
             cart = userLogged.getCart();
         }
         CartItem item = new CartItem(cart, product, quantity, product.getPrice());
@@ -56,20 +56,25 @@ public class CartService {
         return itemRepository.findById(id);
     }
 
-    public void cleanCart() {
-        itemRepository.deleteAll();
-        SessionController.getInstance().getUserLogged().getCart().getItems().clear();
+    public void cleanCart(User userLogged) {
+        if (userLogged != null) {
+            Cart cart = userLogged.getCart();
+            if (cart != null && !cart.getItems().isEmpty()) {
+                itemRepository.deleteAll();
+                cart.getItems().clear();
+            }
+        }
     }
 
-    public void deleteItem(Product productToDelete) {
+    public CartItem deleteItem(Product productToDelete) {
         Optional<CartItem> obj = itemRepository.findByProductId(productToDelete.getId());
         CartItem item = obj.orElse(null);
         if (item != null) {
             itemRepository.deleteByProductId(productToDelete.getId());
             removeCartItem(SessionController.getInstance().getUserLogged(), item);
+            return item;
         }
-        System.out.println("Número de items: " + SessionController.getInstance().getUserLogged().getCart().getItems().size());
-
+        return null;
     }
 
     public void removeCartItem(User user, CartItem itemToRemove) {
@@ -94,13 +99,13 @@ public class CartService {
     }
 
     public Order covertCartToOrder() {
-        Order order = new Order(null, Instant.now(), OrderStatus.SHIPPED, SessionController.getInstance().getUserLogged()); //por agora, todos os orders terão o status de Shipped
         User userLogged = SessionController.getInstance().getUserLogged();
+        Order order = new Order(null, Instant.now(), OrderStatus.SHIPPED, userLogged); //por agora, todos os orders terão o status de Shipped
         for (CartItem item : userLogged.getCart().getItems()) {
             OrderItem orderItem = new OrderItem(order, item.getProduct(), item.getQuantity(), item.getPrice());
             order.getOrderItems().add(orderItem);
         }
-        cleanCart();
+        cleanCart(userLogged);
 
         return order;
     }

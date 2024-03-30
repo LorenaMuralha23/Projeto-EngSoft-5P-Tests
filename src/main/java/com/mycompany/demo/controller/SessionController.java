@@ -23,8 +23,6 @@ public class SessionController {
 
     public void logIn(User userToLogIn) {
         this.userLoggedIn = userToLogIn;
-        JOptionPane.showMessageDialog(null, "Log in complete\n"+
-                "User loged: " + this.userLoggedIn.getName());
     }
 
     public void logOut() {
@@ -34,7 +32,7 @@ public class SessionController {
     public User getUserLogged() {
         return this.userLoggedIn;
     }
-
+    
     public boolean isLoggedIn() {
         return this.userLoggedIn != null;
     }

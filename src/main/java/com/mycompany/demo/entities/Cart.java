@@ -15,15 +15,15 @@ import java.util.Set;
 @Entity
 @Table(name = "tb_cart")
 public class Cart {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
+
     @OneToOne
     @JoinColumn(name = "id_client")
     private User client;
-    
+
     @OneToMany(mappedBy = "id.cart")
     private Set<CartItem> items = new HashSet<CartItem>();
 
@@ -49,11 +49,13 @@ public class Cart {
     public Set<CartItem> getItems() {
         return items;
     }
-    
-    public Double getSubtotal(){
+
+    public Double getSubtotal() {
         Double subtotal = 0.0;
-        for (CartItem i : this.items) {
-            subtotal += i.getPrice()*i.getQuantity();
+        if (getItems() != null) {
+            for (CartItem i : this.items) {
+                subtotal += i.getPrice() * i.getQuantity();
+            }
         }
         return subtotal;
     }
@@ -80,5 +82,4 @@ public class Cart {
         return Objects.equals(this.id, other.id);
     }
 
-    
 }
