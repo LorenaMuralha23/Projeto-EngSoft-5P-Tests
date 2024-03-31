@@ -28,10 +28,10 @@ public class CartPanel extends javax.swing.JPanel {
     }
 
     public void startTable() {
-        User userLogged = EcommerceT1LpApplication.mainFrame.userController.getUserLogged();
+        User userLogged = EcommerceT1LpApplication.mainFrame.userController.getUserLogged(SessionController.getInstance());
 
         if (userLogged.getCart() != null) {
-            Double subtotal = EcommerceT1LpApplication.mainFrame.cartController.getSubtotal();
+            Double subtotal = EcommerceT1LpApplication.mainFrame.cartController.getSubtotal(SessionController.getInstance());
             DecimalFormat df = new DecimalFormat("#.##");
             subTotalLabel.setText(df.format(subtotal));
             
@@ -193,7 +193,7 @@ public class CartPanel extends javax.swing.JPanel {
             String productName = String.valueOf(valueObj);
             Optional<Product> obj = EcommerceT1LpApplication.mainFrame.productController.getProductByName(productName);
             Product productFinded = obj.orElse(null);
-            EcommerceT1LpApplication.mainFrame.cartController.deleteItem(productFinded);
+            EcommerceT1LpApplication.mainFrame.cartController.deleteItem(productFinded, SessionController.getInstance());
         } else {
             JOptionPane.showMessageDialog(null, "Select a product!");
         }
@@ -203,7 +203,7 @@ public class CartPanel extends javax.swing.JPanel {
 
     private void fecharPedidoBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fecharPedidoBtnMouseClicked
 
-        if (!EcommerceT1LpApplication.mainFrame.userController.getUserCartItems().isEmpty()) {
+        if (!EcommerceT1LpApplication.mainFrame.userController.getUserCartItems(SessionController.getInstance()).isEmpty()) {
             JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
             EcommerceT1LpApplication.mainFrame.changeWindow(window, this, EcommerceT1LpApplication.mainFrame.orderPanel);
             EcommerceT1LpApplication.mainFrame.orderPanel.startScreenInfo();

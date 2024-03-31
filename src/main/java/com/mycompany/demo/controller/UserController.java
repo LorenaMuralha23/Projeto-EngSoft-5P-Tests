@@ -25,19 +25,19 @@ public class UserController {
         service.insert(newUser);
     }
     
-    public boolean login(String email, String password){
-        return service.logIn(email, password);
+    public boolean login(String email, String password, SessionController session){
+        return service.logIn(email, password, session);
     }
     
-    public User getUserLogged(){
-        return service.getUserLogged();
+    public User getUserLogged(SessionController session){
+        return service.getUserLogged(session);
     }
     
-    public Set<CartItem> getUserCartItems(){
-        return service.getUserCart();
+    public Set<CartItem> getUserCartItems(SessionController session){
+        return service.getUserCart(session);
     }
     
-    public Address getAddress(){
-        return service.getAddress();
+    public Address getAddress(SessionController session){
+        return service.getAddress(session);
     }
 }

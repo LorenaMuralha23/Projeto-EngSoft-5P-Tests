@@ -42,7 +42,7 @@ public class CartControllerTest {
     private CartService service;
 
     @Mock
-    private SessionController session;
+    private SessionController sessionControllerMock;
 
     public CartControllerTest() {
     }
@@ -56,16 +56,16 @@ public class CartControllerTest {
     public void testAddProductToCartShouldAddAProduct() {
         Product product = new Product();
 
-        controller.addProductToCart(product, 2);
+        controller.addProductToCart(product, 2, sessionControllerMock);
 
-        verify(service, times(1)).addProductToCart(product, 2);
+        verify(service, times(1)).addProductToCart(product, 2, sessionControllerMock);
     }
 
     @Test
     public void testIfTheItemIsAddedAfterMethod() {
         Product product = new Product();
 
-        controller.addProductToCart(product, 2);
+        controller.addProductToCart(product, 2, sessionControllerMock);
 
         CartItem itemToTest = new CartItem();
         itemToTest.setProduct(product);
@@ -93,9 +93,9 @@ public class CartControllerTest {
 
         when(service.getCartItemById(any(Integer.class))).thenReturn(Optional.of(itemToTest));
 
-        controller.addProductToCart(product, 2);
+        controller.addProductToCart(product, 2, sessionControllerMock);
 
-        verify(service, times(1)).addProductToCart(product, 2);
+        verify(service, times(1)).addProductToCart(product, 2, sessionControllerMock);
 
         Optional<CartItem> cartItem = controller.getItem(1);
         CartItem itemObj = cartItem.orElse(null);
@@ -114,9 +114,9 @@ public class CartControllerTest {
 
         itemToTest.setCart(cart);
 
-        controller.addProductToCart(product, 2);
+        controller.addProductToCart(product, 2, sessionControllerMock);
 
-        verify(service, times(1)).addProductToCart(product, 2);
+        verify(service, times(1)).addProductToCart(product, 2, sessionControllerMock);
 
         Optional<CartItem> cartItem = controller.getItem(1000); //invalid id
         CartItem itemObj = cartItem.orElse(null);
@@ -138,8 +138,8 @@ public class CartControllerTest {
         item2.setProduct(p2);
         item2.setCart(cart);
 
-        controller.addProductToCart(p1, 1);
-        controller.addProductToCart(p2, 1);
+        controller.addProductToCart(p1, 1, sessionControllerMock);
+        controller.addProductToCart(p2, 1, sessionControllerMock);
 
         user.setCart(cart);
 
@@ -166,10 +166,10 @@ public class CartControllerTest {
         itemToKeep.setProduct(p2);
         itemToKeep.setCart(cart);
 
-        controller.addProductToCart(p1, 1);
-        controller.addProductToCart(p2, 1);
+        controller.addProductToCart(p1, 1, sessionControllerMock);
+        controller.addProductToCart(p2, 1, sessionControllerMock);
 
-        controller.deleteItem(p1);
+        controller.deleteItem(p1, sessionControllerMock);
 
         assertFalse(cart.getItems().contains(itemToDelete));
     }
@@ -183,9 +183,9 @@ public class CartControllerTest {
         itemToKeep.setProduct(p1);
         itemToKeep.setCart(cart);
 
-        controller.addProductToCart(p1, 1);
+        controller.addProductToCart(p1, 1, sessionControllerMock);
 
-        assertNull(controller.deleteItem(new Product()));
+        assertNull(controller.deleteItem(new Product(), sessionControllerMock));
     }
 
     @Test
@@ -209,11 +209,11 @@ public class CartControllerTest {
 
         user.setCart(cart);
 
-        when(service.getSubtotal()).thenReturn(user.getCart().getSubtotal());
+        when(service.getSubtotal(sessionControllerMock)).thenReturn(user.getCart().getSubtotal());
 
         double oficialResult = (item1.getPrice() * item1.getQuantity()) + (item2.getPrice() * item2.getQuantity());
 
-        assertEquals(oficialResult, controller.getSubtotal());
+        assertEquals(oficialResult, controller.getSubtotal(sessionControllerMock));
     }
 
     @Test
@@ -222,17 +222,17 @@ public class CartControllerTest {
         Cart cart = new Cart();
         user.setCart(cart);
 
-        when(service.getSubtotal()).thenReturn(user.getCart().getSubtotal());
+        when(service.getSubtotal(sessionControllerMock)).thenReturn(user.getCart().getSubtotal());
 
-        assertEquals(0.0, controller.getSubtotal());
+        assertEquals(0.0, controller.getSubtotal(sessionControllerMock));
     }
 
     @Test
     public void testConvertCartToOrderIfReturnsAnOrder() {
         
         Order orderMock = new Order();
-        when(service.covertCartToOrder()).thenReturn(orderMock);
-        Order orderReturned = controller.covertCartToOrder();
+        when(service.covertCartToOrder(sessionControllerMock)).thenReturn(orderMock);
+        Order orderReturned = controller.covertCartToOrder(sessionControllerMock);
         assertNotNull(orderReturned); // Verifica se o resultado não é nulo
         assertEquals(orderMock, orderReturned);
     }

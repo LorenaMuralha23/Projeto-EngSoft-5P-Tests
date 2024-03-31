@@ -1,6 +1,7 @@
 package com.mycompany.demo.view.Panels;
 
 import com.mycompany.demo.EcommerceT1LpApplication;
+import com.mycompany.demo.controller.SessionController;
 import com.mycompany.demo.controller.UserController;
 import com.mycompany.demo.view.MainFrame;
 import javax.swing.JFrame;
@@ -105,7 +106,7 @@ public class LoginPanel extends javax.swing.JPanel {
         JFrame window = (JFrame) SwingUtilities.getWindowAncestor(this);
         String email = emailField.getText();
         String password = passwordField.getText();
-        boolean logIn = EcommerceT1LpApplication.mainFrame.userController.login(email, password);
+        boolean logIn = EcommerceT1LpApplication.mainFrame.userController.login(email, password, SessionController.getInstance());
         
         if (logIn){
             EcommerceT1LpApplication.mainFrame.changeWindow(window, this, EcommerceT1LpApplication.mainFrame.homePanel);

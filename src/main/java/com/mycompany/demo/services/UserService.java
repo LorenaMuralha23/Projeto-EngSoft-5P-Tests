@@ -48,12 +48,10 @@ public class UserService {
         } else {
             if (sameUsername) {
                 throw new IllegalArgumentException("Username provided is already in use. Try again");
-            } else if (sameEmail) {
+            } else{
                 throw new IllegalArgumentException("Email provided is already in use. Try again");
             }
         }
-
-        return null;
 
     }
 
@@ -66,40 +64,40 @@ public class UserService {
     private void updateData(User entity, User obj) {
         entity.setName(obj.getName());
         entity.setEmail(obj.getEmail());
+        entity.setPassword(obj.getPhone());
         entity.setPhone(obj.getPhone());
     }
 
-    public boolean logIn(String email, String password) {
+    public boolean logIn(String email, String password, SessionController session) {
         Optional<User> userOptional = repository.findByEmail(email);
 
         if (userOptional.isPresent()) {
             User findedUser = userOptional.get();
-            
+
             if (findedUser.getPassword().equals(password)) {
-                JOptionPane.showMessageDialog(null, "Deu certo!");
-                SessionController.getInstance().logIn(findedUser);
+                session.logIn(findedUser);
                 return true;
-            }else{
-                JOptionPane.showMessageDialog(null, "Invalid password!");
+            } else {
+                throw new IllegalArgumentException("Invalid password!");
             }
 
-        }else{
-            JOptionPane.showMessageDialog(null, "User not found");
+        } else {
+            throw new IllegalArgumentException("User not found!");
         }
-        
-        return false;
-    }
-    
-    public User getUserLogged(){
-        return SessionController.getInstance().getUserLogged();
+
     }
 
-    public Set<CartItem> getUserCart(){
-        System.out.println(SessionController.getInstance().getUserLogged().getCart().getItems());
-        return SessionController.getInstance().getUserLogged().getCart().getItems();
+    public User getUserLogged(SessionController session) {
+        return session.getUserLogged();
     }
+
+    public Set<CartItem> getUserCart(SessionController session) {
+        return session.getUserLogged().getCart().getItems();
+    }
+
+    public Address getAddress(SessionController session) {
+        return session.getUserLogged().getAddress();
+    }
+
     
-    public Address getAddress(){
-        return SessionController.getInstance().getUserLogged().getAddress();
-    }
 }

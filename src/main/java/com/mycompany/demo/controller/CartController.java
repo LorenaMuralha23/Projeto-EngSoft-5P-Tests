@@ -18,12 +18,14 @@ public class CartController {
 
     @Autowired
     private CartService service;
+    
 
     public CartController() {
+        service = new CartService();
     }
 
-    public void addProductToCart(Product product, Integer quantity) {
-        service.addProductToCart(product, quantity);
+    public void addProductToCart(Product product, Integer quantity, SessionController session) {
+        service.addProductToCart(product, quantity, session);
     }
 
     public Optional<CartItem> getItem(Integer id) {
@@ -34,16 +36,16 @@ public class CartController {
         service.cleanCart(userLogged);
     }
 
-    public CartItem deleteItem(Product product) {
-        return service.deleteItem(product);
+    public CartItem deleteItem(Product product, SessionController session) {
+        return service.deleteItem(product, session);
     }
 
-    public Double getSubtotal() {
-        return service.getSubtotal();
+    public Double getSubtotal(SessionController session) {
+        return service.getSubtotal(session);
     }
 
-    public Order covertCartToOrder() {
-        return service.covertCartToOrder();
+    public Order covertCartToOrder(SessionController session) {
+        return service.covertCartToOrder(session);
     }
 
     public int calculateInstallments(double totalValue) {

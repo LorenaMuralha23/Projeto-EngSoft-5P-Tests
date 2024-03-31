@@ -4,11 +4,17 @@
  */
 package com.mycompany.demo.ServicesTest;
 
+import com.mycompany.demo.controller.SessionController;
+import com.mycompany.demo.controller.ValidatorController;
 import com.mycompany.demo.entities.Address;
+import com.mycompany.demo.entities.Cart;
 import com.mycompany.demo.entities.CartItem;
 import com.mycompany.demo.entities.User;
+import com.mycompany.demo.repositories.UserRepository;
 import com.mycompany.demo.services.UserService;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
@@ -17,30 +23,40 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 /**
  *
  * @author USER
  */
 public class UserServiceTest {
-    
+
+    //when(service.getCartItemById(any(Integer.class))).thenReturn(Optional.of(itemToTest));
+    @InjectMocks
+    private UserService service;
+
+    @Mock
+    private UserRepository repository;
+
+    @Mock
+    private ValidatorController validator;
+
+    @Mock
+    private SessionController sessionControllerMock;
+
     public UserServiceTest() {
     }
-    
-    @BeforeAll
-    public static void setUpClass() {
-    }
-    
-    @AfterAll
-    public static void tearDownClass() {
-    }
-    
+
     @BeforeEach
     public void setUp() {
-    }
-    
-    @AfterEach
-    public void tearDown() {
+        openMocks(this);
     }
 
     /**
@@ -48,117 +64,201 @@ public class UserServiceTest {
      */
     @Test
     public void testFindAll() {
-        System.out.println("findAll");
-        UserService instance = new UserService();
-        List<User> expResult = null;
-        List<User> result = instance.findAll();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        User userMock1 = new User();
+        User userMock2 = new User();
+        User userMock3 = new User();
+
+        List<User> listExpected = Arrays.asList(userMock1, userMock2, userMock3);
+
+        when(repository.findAll()).thenReturn(listExpected);
+
+        List<User> listReturned = service.findAll();
+
+        verify(repository, times(1)).findAll();
+        assertEquals(listExpected, listReturned);
+        for (int i = 0; i < listExpected.size(); i++) {
+            assertTrue(Objects.equals(listExpected.get(i).getId(), listReturned.get(i).getId()));
+        }
     }
 
-    /**
-     * Test of findById method, of class UserService.
-     */
     @Test
     public void testFindById() {
-        System.out.println("findById");
-        Long id = null;
-        UserService instance = new UserService();
-        Optional<User> expResult = null;
-        Optional<User> result = instance.findById(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        User userMock = new User();
+        userMock.setId(12L);
+
+        when(repository.findById(any(Long.class))).thenReturn(Optional.of(userMock));
+
+        Optional<User> userOpt = service.findById(12L);
+        User userReturned = userOpt.get();
+
+        assertNotNull(userOpt);
+        assertNotNull(userReturned);
+        assertEquals(userMock.getId(), userReturned.getId());
     }
 
-    /**
-     * Test of insert method, of class UserService.
-     */
     @Test
-    public void testInsert() {
-        System.out.println("insert");
-        User newUser = null;
-        UserService instance = new UserService();
-        User expResult = null;
-        User result = instance.insert(newUser);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testFindByIdForInvalidId() {
+        when(repository.findById(any(Long.class))).thenReturn(Optional.empty());
+
+        Optional<User> userOpt = service.findById(12L);
+
+        assertTrue(userOpt.isEmpty());
     }
 
-    /**
-     * Test of update method, of class UserService.
-     */
+    @Test
+    public void testInsertForValidUser() {
+        User userMock = new User(null, "User Test", "userTst@gmail.com", "99999999", "password");
+
+        when(repository.existsByName(userMock.getName())).thenReturn(false);
+        when(repository.existsByName(userMock.getEmail())).thenReturn(false);
+        when(repository.save(userMock)).thenReturn(userMock);
+        when(validator.isValidEmail(userMock.getEmail())).thenReturn(true);
+
+        User userReturned = service.insert(userMock);
+
+        assertNotNull(userReturned);
+        assertEquals("User Test", userReturned.getName());
+        assertEquals("userTst@gmail.com", userReturned.getEmail());
+        assertEquals("password", userReturned.getPassword());
+
+    }
+
+    @Test
+    public void testInsertForAnExistingUsername() {
+        User userMock = new User(null, "User Test", "userTst@gmail.com", "99999999", "password");
+
+        when(repository.existsByName(userMock.getName())).thenReturn(true);
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> service.insert(userMock));
+        assertEquals("Username provided is already in use. Try again", e.getMessage());
+    }
+
+    @Test
+    public void testInsertForExistingEmail() {
+        User userMock = new User(null, "User Test", "userTst..INVALID@gmail.com", "99999999", "password");
+
+        when(repository.existsByEmail(userMock.getEmail())).thenReturn(true);
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> service.insert(userMock));
+        assertEquals("Email provided is already in use. Try again", e.getMessage());
+    }
+
+    @Test
+    public void testInsertForInvalidEmailFormat() {
+        User userMock = new User(null, "User Test", "userTst@gmail.com", "99999999", "password");
+
+        when(repository.existsByName(userMock.getName())).thenReturn(false);
+        when(repository.existsByName(userMock.getEmail())).thenReturn(false);
+        when(validator.isValidEmail(userMock.getEmail())).thenReturn(false);
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> service.insert(userMock));
+        assertEquals("Invalid email format", e.getMessage());
+
+    }
+
     @Test
     public void testUpdate() {
-        System.out.println("update");
-        Long id = null;
-        User obj = null;
-        UserService instance = new UserService();
-        User expResult = null;
-        User result = instance.update(id, obj);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        User userMock = mock(User.class);
+        User userInfoToUpdated = new User(null, "User newName", "userTst@gmail.com", "99999999", "new password");
+
+        when(repository.getReferenceById(userMock.getId())).thenReturn(userMock);
+        when(repository.save(userMock)).thenReturn(userMock);
+
+        service.update(userMock.getId(), userInfoToUpdated);
+
+        verify(userMock, times(1)).setName(any(String.class));
+        verify(userMock, times(1)).setEmail(any(String.class));
+        verify(userMock, times(1)).setPassword(any(String.class));
+        verify(userMock, times(1)).setPhone(any(String.class));
     }
 
-    /**
-     * Test of logIn method, of class UserService.
-     */
     @Test
-    public void testLogIn() {
-        System.out.println("logIn");
-        String email = "";
-        String password = "";
-        UserService instance = new UserService();
-        boolean expResult = false;
-        boolean result = instance.logIn(email, password);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getUserLogged method, of class UserService.
-     */
-    @Test
-    public void testGetUserLogged() {
-        System.out.println("getUserLogged");
-        UserService instance = new UserService();
-        User expResult = null;
-        User result = instance.getUserLogged();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getUserCart method, of class UserService.
-     */
-    @Test
-    public void testGetUserCart() {
-        System.out.println("getUserCart");
-        UserService instance = new UserService();
-        Set<CartItem> expResult = null;
-        Set<CartItem> result = instance.getUserCart();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getAddress method, of class UserService.
-     */
-    @Test
-    public void testGetAddress() {
-        System.out.println("getAddress");
-        UserService instance = new UserService();
-        Address expResult = null;
-        Address result = instance.getAddress();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testLogInForValidUser() {
+        User userMock = new User(null, "User Test", "userTst@gmail.com", "99999999", "password");
+        when(repository.findByEmail(any(String.class))).thenReturn(Optional.of(userMock));
+        assertTrue(service.logIn(userMock.getEmail(), userMock.getPassword(), sessionControllerMock));
     }
     
+    @Test
+    public void testLogInForInvalidPassword() {
+        User userMock = new User(null, "User Test", "userTst@gmail.com", "99999999", "password");
+        when(repository.findByEmail(any(String.class))).thenReturn(Optional.of(userMock));
+        
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> service.logIn(userMock.getEmail(), "invalid password", sessionControllerMock));
+        assertEquals("Invalid password!", e.getMessage());
+    }
+
+    @Test
+    public void testLogInForNonExistingUser() {
+        User userMock = new User(null, "User Test", "userTst@gmail.com", "99999999", "password");
+        when(repository.findByEmail(any(String.class))).thenReturn(Optional.empty());
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> service.logIn(userMock.getEmail(), "password", sessionControllerMock));
+        assertEquals("User not found!", e.getMessage());
+    }
+    
+    @Test
+    public void testGetUserLogged(){
+        User userTest = new User();
+        userTest.setId(12L);
+        when(sessionControllerMock.getUserLogged()).thenReturn(userTest);
+        User userReturned = service.getUserLogged(sessionControllerMock);
+        verify(sessionControllerMock, times(1)).getUserLogged();
+        
+        assertEquals(userTest.getId(), userReturned.getId());
+    }
+    
+    @Test
+    public void testGetUserCartForAnEmptyCart(){
+        User userTest = new User();
+        Cart cart = new Cart(userTest);
+        userTest.setCart(cart);
+        when(sessionControllerMock.getUserLogged()).thenReturn(userTest);
+        Set<CartItem> listReturned = service.getUserCart(sessionControllerMock);
+        
+        assertNotNull(listReturned);
+        assertTrue(listReturned.isEmpty());
+    }
+    
+    @Test
+    public void testGetUserCartForCartWithItems(){
+        User userTest = new User();
+        Cart cart = new Cart(userTest);
+       
+        CartItem item1 = new CartItem();
+        CartItem item2 = new CartItem();
+       
+        cart.getItems().add(item1);
+        cart.getItems().add(item2);
+        
+        userTest.setCart(cart);
+        when(sessionControllerMock.getUserLogged()).thenReturn(userTest);
+        Set<CartItem> listReturned = service.getUserCart(sessionControllerMock);
+        
+        assertNotNull(listReturned);
+        assertFalse(listReturned.isEmpty());
+    }
+    
+    @Test
+    public void testGetAddressForUserWhoHasAnAddress(){
+        User userTest = new User();
+        Address address = new Address();
+        userTest.setAddress(address);
+        when(sessionControllerMock.getUserLogged()).thenReturn(userTest);
+        
+        Address addressReturned = service.getAddress(sessionControllerMock);
+        
+        assertEquals(userTest.getAddress(), addressReturned);
+    }
+    
+    @Test
+    public void testGetAddressForUserWhoHasNoAddress(){
+        User userTest = new User();
+        when(sessionControllerMock.getUserLogged()).thenReturn(userTest);
+        
+        Address addressReturned = service.getAddress(sessionControllerMock);
+        
+        assertNull(addressReturned);
+    }
+   
 }

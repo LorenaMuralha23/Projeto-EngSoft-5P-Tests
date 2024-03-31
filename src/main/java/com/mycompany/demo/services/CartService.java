@@ -30,25 +30,25 @@ public class CartService {
 
     @Autowired
     CartItemRepository itemRepository;
-
+    
     public CartService() {
     }
 
-    public void createCart(User userLogged) {
+    public void createCart(User userLogged, SessionController session) {
         Cart cart = new Cart(userLogged);
-        SessionController.getInstance().getUserLogged().setCart(cart);
+        session.getUserLogged().setCart(cart);
         repository.save(cart);
     }
 
-    public void addProductToCart(Product product, Integer quantity) {
-        User userLogged = SessionController.getInstance().getUserLogged();
-        Cart cart = userLogged.getCart();
-        if (cart == null) {
-            createCart(userLogged);
-            cart = userLogged.getCart();
+    public void addProductToCart(Product product, Integer quantity, SessionController session) {
+        User userLogged = session.getUserLogged();
+        Cart userCart = userLogged.getCart();
+        if (userCart == null) {
+            createCart(userLogged, session);
+            userCart = userLogged.getCart();
         }
-        CartItem item = new CartItem(cart, product, quantity, product.getPrice());
-        cart.getItems().add(item);
+        CartItem item = new CartItem(userCart, product, quantity, product.getPrice());
+        userCart.getItems().add(item);
         itemRepository.save(item);
     }
 
@@ -66,12 +66,12 @@ public class CartService {
         }
     }
 
-    public CartItem deleteItem(Product productToDelete) {
+    public CartItem deleteItem(Product productToDelete, SessionController session) {
         Optional<CartItem> obj = itemRepository.findByProductId(productToDelete.getId());
         CartItem item = obj.orElse(null);
         if (item != null) {
             itemRepository.deleteByProductId(productToDelete.getId());
-            removeCartItem(SessionController.getInstance().getUserLogged(), item);
+            removeCartItem(session.getUserLogged(), item);
             return item;
         }
         return null;
@@ -94,12 +94,12 @@ public class CartService {
         }
     }
 
-    public Double getSubtotal() {
-        return SessionController.getInstance().getUserLogged().getCart().getSubtotal();
+    public Double getSubtotal(SessionController session) {
+        return session.getUserLogged().getCart().getSubtotal();
     }
 
-    public Order covertCartToOrder() {
-        User userLogged = SessionController.getInstance().getUserLogged();
+    public Order covertCartToOrder(SessionController session) {
+        User userLogged = session.getUserLogged();
         Order order = new Order(null, Instant.now(), OrderStatus.SHIPPED, userLogged); //por agora, todos os orders terão o status de Shipped
         for (CartItem item : userLogged.getCart().getItems()) {
             OrderItem orderItem = new OrderItem(order, item.getProduct(), item.getQuantity(), item.getPrice());
@@ -117,5 +117,6 @@ public class CartService {
 
         return numInstallments;
     }
+    
 
 }

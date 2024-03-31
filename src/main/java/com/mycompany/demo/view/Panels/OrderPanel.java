@@ -21,19 +21,19 @@ public class OrderPanel extends javax.swing.JPanel {
     }
 
     public void startScreenInfo() {
-        nameLabel.setText(EcommerceT1LpApplication.mainFrame.userController.getUserLogged().getName());
+        nameLabel.setText(EcommerceT1LpApplication.mainFrame.userController.getUserLogged(SessionController.getInstance()).getName());
         DecimalFormat df = new DecimalFormat("#.##");
-        subtotalLabel.setText(df.format(EcommerceT1LpApplication.mainFrame.cartController.getSubtotal()));
+        subtotalLabel.setText(df.format(EcommerceT1LpApplication.mainFrame.cartController.getSubtotal(SessionController.getInstance())));
 
-        streetField.setText(EcommerceT1LpApplication.mainFrame.userController.getAddress().getStreet());
-        stateField.setText(EcommerceT1LpApplication.mainFrame.userController.getAddress().getState());
-        numberField.setText(EcommerceT1LpApplication.mainFrame.userController.getAddress().getNumber());
+        streetField.setText(EcommerceT1LpApplication.mainFrame.userController.getAddress(SessionController.getInstance()).getStreet());
+        stateField.setText(EcommerceT1LpApplication.mainFrame.userController.getAddress(SessionController.getInstance()).getState());
+        numberField.setText(EcommerceT1LpApplication.mainFrame.userController.getAddress(SessionController.getInstance()).getNumber());
 
         startInstallmentNum();
     }
 
     public void startInstallmentNum() {
-        double subtotal = EcommerceT1LpApplication.mainFrame.cartController.getSubtotal();
+        double subtotal = EcommerceT1LpApplication.mainFrame.cartController.getSubtotal(SessionController.getInstance());
         int numInstallments = EcommerceT1LpApplication.mainFrame.cartController.calculateInstallments(subtotal);
 
         installmentsCB.removeAllItems();
@@ -262,7 +262,7 @@ public class OrderPanel extends javax.swing.JPanel {
     private void checkOutBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_checkOutBtnMouseClicked
 
         if (creditCardOpt.isSelected() || pixOpt.isSelected()) {
-            Order order = EcommerceT1LpApplication.mainFrame.cartController.covertCartToOrder();
+            Order order = EcommerceT1LpApplication.mainFrame.cartController.covertCartToOrder(SessionController.getInstance());
             Payment payment;
 
             if (creditCardOpt.isSelected()) {

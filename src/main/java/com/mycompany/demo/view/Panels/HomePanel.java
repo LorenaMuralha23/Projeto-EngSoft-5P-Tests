@@ -5,6 +5,7 @@
 package com.mycompany.demo.view.Panels;
 
 import com.mycompany.demo.EcommerceT1LpApplication;
+import com.mycompany.demo.controller.SessionController;
 import com.mycompany.demo.entities.Product;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -158,7 +159,7 @@ public class HomePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_seeCartBtnMouseClicked
 
     public void addToCart(Product product, Integer quantity) {
-        EcommerceT1LpApplication.mainFrame.cartController.addProductToCart(product, quantity);
+        EcommerceT1LpApplication.mainFrame.cartController.addProductToCart(product, quantity, SessionController.getInstance());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
