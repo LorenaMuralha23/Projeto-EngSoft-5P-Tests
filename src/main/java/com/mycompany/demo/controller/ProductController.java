@@ -24,19 +24,16 @@ public class ProductController {
     }
     
     public Product findById(Long id){
-        Optional<Product> findedProduct = service.findById(id);
-        if (findedProduct.isPresent()){
-            return findedProduct.get();
-        }
+        Product findedProduct = service.findById(id);
         
-        return null;
+        return findedProduct;
     }
     
     public Product createInstance(String name, String description, Double price, String imgUrl){
         return service.createInstance(name, description, price, imgUrl);
     }
     
-    public Optional<Product> getProductByName(String productName){
+    public Product getProductByName(String productName){
         return service.getProductByName(productName);
     }
 }

@@ -191,8 +191,7 @@ public class CartPanel extends javax.swing.JPanel {
         if (rowSelected != -1) {
             Object valueObj = cartTable.getValueAt(rowSelected, 0);
             String productName = String.valueOf(valueObj);
-            Optional<Product> obj = EcommerceT1LpApplication.mainFrame.productController.getProductByName(productName);
-            Product productFinded = obj.orElse(null);
+            Product productFinded = EcommerceT1LpApplication.mainFrame.productController.getProductByName(productName);
             EcommerceT1LpApplication.mainFrame.cartController.deleteItem(productFinded, SessionController.getInstance());
         } else {
             JOptionPane.showMessageDialog(null, "Select a product!");

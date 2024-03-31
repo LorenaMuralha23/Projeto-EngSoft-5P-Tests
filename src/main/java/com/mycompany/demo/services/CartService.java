@@ -30,7 +30,7 @@ public class CartService {
 
     @Autowired
     CartItemRepository itemRepository;
-    
+
     public CartService() {
     }
 
@@ -67,31 +67,27 @@ public class CartService {
     }
 
     public CartItem deleteItem(Product productToDelete, SessionController session) {
+        User userLogged = session.getUserLogged();
         Optional<CartItem> obj = itemRepository.findByProductId(productToDelete.getId());
         CartItem item = obj.orElse(null);
         if (item != null) {
             itemRepository.deleteByProductId(productToDelete.getId());
-            removeCartItem(session.getUserLogged(), item);
+            removeCartItem(userLogged, item);
             return item;
         }
         return null;
     }
 
-    public void removeCartItem(User user, CartItem itemToRemove) {
+    public boolean removeCartItem(User user, CartItem itemToRemove) {
         // Obtém o carrinho do usuário
         Cart cart = user.getCart();
-
+        boolean deleted = false;
         // Verifica se o carrinho existe e se o item está presente no carrinho
         if (cart != null && cart.getItems().contains(itemToRemove)) {
             // Remove o item do carrinho
-            System.out.println("O objeto esta presente!");
-            boolean deleted = cart.getItems().remove(itemToRemove);
-            if (deleted) {
-                System.out.println("Objeto deletado");
-            } else {
-                System.out.println("Sapoha nem chega :)");
-            }
+            deleted = cart.getItems().remove(itemToRemove);
         }
+        return deleted;
     }
 
     public Double getSubtotal(SessionController session) {
@@ -113,10 +109,18 @@ public class CartService {
     public int calculateInstallments(double totalValue) {
         double minInstallmentValue = 20.0;
 
-        int numInstallments = (int) Math.ceil(totalValue / minInstallmentValue);
+        // Se o valor total for menor ou igual ao valor mínimo de uma parcela, retorna 1
+        if (totalValue <= minInstallmentValue) {
+            return 1;
+        }
+
+        int numInstallments = (int) Math.floor(totalValue / minInstallmentValue);
+        
+        if (totalValue%numInstallments == 0) {
+            numInstallments--;
+        }
 
         return numInstallments;
     }
-    
 
 }

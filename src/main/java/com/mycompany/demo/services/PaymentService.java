@@ -17,7 +17,9 @@ public class PaymentService {
     }
     
     public Payment generatePayment(Instant moment, Order order, Integer type){
-        return new Payment(null, moment, order, type);
+        Payment newPayment = new Payment(null, moment, order, type);
+        repository.save(newPayment);
+        return newPayment;
     }
     
 }

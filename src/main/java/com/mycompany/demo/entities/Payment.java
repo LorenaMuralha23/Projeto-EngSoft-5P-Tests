@@ -70,6 +70,15 @@ public class Payment implements Serializable {
         this.order = order;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    
     @Override
     public int hashCode() {
         return Objects.hash(id);

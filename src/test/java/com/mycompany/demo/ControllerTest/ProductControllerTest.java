@@ -54,7 +54,7 @@ public class ProductControllerTest {
     @Test
     public void testFindByIdMethodShouldReturnAnOptionalValid(){
         Product productMock = new Product();
-        when(service.findById(any(Long.class))).thenReturn(Optional.of(productMock));
+        when(service.findById(any(Long.class))).thenReturn(productMock);
         
         Product productReturned = controller.findById(1L);
         
@@ -63,7 +63,7 @@ public class ProductControllerTest {
     
     @Test
     public void testFindByIdMethodShouldReturnAnOptionalInvalid(){
-        when(service.findById(any(Long.class))).thenReturn(Optional.empty());
+        when(service.findById(any(Long.class))).thenReturn(null);
         
         Product productReturned = controller.findById(100L);
         
@@ -94,10 +94,9 @@ public class ProductControllerTest {
         String imgUrl = " ";
         Product productMock = new Product(null, name, description, price, imgUrl);
         
-        when(service.getProductByName(any(String.class))).thenReturn(Optional.of(productMock));
+        when(service.getProductByName(any(String.class))).thenReturn(productMock);
         
-        Optional<Product> productReturnedOpt = controller.getProductByName(name);
-        Product productReturned = productReturnedOpt.get();
+        Product productReturned = controller.getProductByName(name);
         
         assertNotNull(productReturned);
         assertEquals(productMock, productReturned);
@@ -106,11 +105,11 @@ public class ProductControllerTest {
     @Test
     public void testGetProductByNameShouldReturnAnNullOptionalForInvalidName(){
         
-        when(service.getProductByName(any(String.class))).thenReturn(Optional.empty());
+        when(service.getProductByName(any(String.class))).thenReturn(null);
         
-        Optional<Product> productReturned = controller.getProductByName("Any name");
+        Product productReturned = controller.getProductByName("Any name");
         
-        assertTrue(productReturned.isEmpty());
+        assertNull(productReturned);
     }
     
 }

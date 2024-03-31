@@ -33,7 +33,11 @@ public class Cart {
     public Cart(User client) {
         this.client = client;
     }
-
+    
+    public void setId(Integer id){
+        this.id = id;
+    }
+    
     public Integer getId() {
         return id;
     }

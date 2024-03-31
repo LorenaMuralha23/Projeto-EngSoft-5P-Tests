@@ -19,19 +19,21 @@ public class ProductService {
         repository.save(product);
     }
 
-    public Optional<Product> findById(Long id) {
-        Optional<Product> product = repository.findById(id);
-
-        return product;
+    public Product findById(Long id) {
+        Optional<Product> productObj = repository.findById(id);
+        Product productFinded = productObj.orElse(null);
+        return productFinded;
     }
 
     public Product createInstance(String name, String description, Double price, String imgUrl) {
         Product product = new Product(null, name, description, price, imgUrl);
-        insert(product);
+        repository.save(product);
         return product;
     }
-    
-    public Optional<Product> getProductByName(String name){
-        return repository.findByName(name);
+
+    public Product getProductByName(String name) {
+        Optional<Product> productObj = repository.findByName(name);
+        Product productFinded = productObj.orElse(null);
+        return productFinded;
     }
 }

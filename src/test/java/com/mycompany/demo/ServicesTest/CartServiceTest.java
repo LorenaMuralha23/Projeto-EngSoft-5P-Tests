@@ -4,11 +4,14 @@ import com.mycompany.demo.controller.SessionController;
 import com.mycompany.demo.entities.Cart;
 import com.mycompany.demo.entities.CartItem;
 import com.mycompany.demo.entities.Order;
+import com.mycompany.demo.entities.OrderItem;
 import com.mycompany.demo.entities.Product;
 import com.mycompany.demo.entities.User;
+import com.mycompany.demo.entities.enums.OrderStatus;
 import com.mycompany.demo.repositories.CartItemRepository;
 import com.mycompany.demo.repositories.CartRepository;
 import com.mycompany.demo.services.CartService;
+import java.util.Arrays;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -17,6 +20,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.times;
@@ -43,7 +47,7 @@ public class CartServiceTest {
     private SessionController sessionControllerMock;
 
     private User userTest;
-    
+
     public CartServiceTest() {
     }
 
@@ -60,12 +64,11 @@ public class CartServiceTest {
     @Test
     public void testCreateCart() {
         Cart expectedCart = new Cart(userTest);
-        
-        
+
         when(repository.save(any(Cart.class))).thenReturn(expectedCart);
 
         service.createCart(userTest, sessionControllerMock);
-        
+
         verify(sessionControllerMock, times(1)).getUserLogged();
         verify(repository, times(1)).save(expectedCart);
     }
@@ -75,43 +78,69 @@ public class CartServiceTest {
      */
     @Test
     public void testAddProductToCartIfCartIsNull() {
-        Product product = new Product(); // Criando um produto simulado
-        Integer quantity = 1; // Definindo a quantidade
-        User userLogged = new User(); // Criando um usuário simulado
-        Cart cart = new Cart(userLogged); // Criando um carrinho simulado
-        cart.setItems(new HashSet<>()); // Inicializando a lista de itens do carrinho
 
-        // Definindo comportamento do mock da sessão
-        when(session.getUserLogged()).thenReturn(userLogged);
+        Product product = new Product();
+        Integer quantity = 1;
+        User userLogged = new User();
 
-        // Definindo comportamento do mock do repositório de itens
-        when(itemRepository.save(any(CartItem.class))).thenAnswer(invocation -> {
-            CartItem item = invocation.getArgument(0);
-            cart.getItems().add(item);
-            return item;
-        });
-
-        // Definindo comportamento do mock do serviço de carrinho para evitar a criação de um novo carrinho
-        doNothing().when(cartService).createCart(any(User.class), any(SessionController.class));
-        
-        // Definindo o carrinho do usuário na sessão
-        userLogged.setCart(cart);
+        // Definindo o carrinho do usuário como nulo
+        userLogged.setCart(null);
 
         // Act
-        cartService.addProductToCart(product, quantity, session);
+        service.addProductToCart(product, quantity, sessionControllerMock);
 
         // Assert
-        verify(session, times(1)).getUserLogged(); // Verifica se o método getUserLogged foi chamado uma vez
-        verify(itemRepository, times(1)).save(any(CartItem.class)); // Verifica se o método save do repositório de itens foi chamado uma vez
-        assertEquals(1, cart.getItems().size()); // Verifica se o item foi adicionado ao carrinho
+        verify(sessionControllerMock, times(2)).getUserLogged(); // Verifica se o método getUserLogged foi chamado 2 vezes = cart É null
+        verify(itemRepository, times(1)).save(any(CartItem.class));
     }
+
+    @Test
+    public void testAddProductToCartIfCartIsNotNull() {
+        // Arrange
+        Product product = new Product(); // Criando um produto simulado
+        Integer quantity = 1; // Definindo a quantidade
+
+        Cart cart = new Cart(userTest);
+
+        // Definindo o carrinho do usuário como nulo
+        userTest.setCart(cart);
+
+        // Act
+        service.addProductToCart(product, quantity, sessionControllerMock);
+
+        // Assert
+        verify(sessionControllerMock, times(1)).getUserLogged(); // Verifica se o método getUserLogged foi chamado uma vez = cart não é null
+        verify(itemRepository, times(1)).save(any(CartItem.class));
     }
 
     /**
      * Test of getCartItemById method, of class CartService.
      */
     @Test
-    public void testGetCartItemById() {
+    public void testGetCartItemByIdIfIdIsValid() {
+        CartItem itemExpected = new CartItem();
+        Product product = new Product();
+        product.setId(2);
+        Cart cart = new Cart(userTest);
+        cart.setId(1);
+        itemExpected.setProduct(product);
+        itemExpected.setCart(cart);
+
+        when(itemRepository.findById(any(Integer.class))).thenReturn(Optional.of(itemExpected));
+
+        Optional<CartItem> itemReturnedObj = service.getCartItemById(1);
+        CartItem itemReturned = itemReturnedObj.get();
+
+        assertNotNull(itemReturnedObj);
+        assertEquals(itemExpected.getProduct().getId(), itemReturned.getProduct().getId());
+    }
+
+    @Test
+    public void testGetCartItemByIdIfIdIsInvalid() {
+        when(itemRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+
+        Optional<CartItem> itemReturnedObj = service.getCartItemById(1);
+        assertTrue(itemReturnedObj.isEmpty());
     }
 
     /**
@@ -119,13 +148,58 @@ public class CartServiceTest {
      */
     @Test
     public void testCleanCart() {
+        CartItem item1 = new CartItem();
+        CartItem item2 = new CartItem();
+        Product product = new Product();
+        product.setId(2);
+        Cart cart = new Cart(userTest);
+        item1.setProduct(product);
+        item2.setProduct(product);
+        item2.setCart(cart);
+        item1.setCart(cart);
+
+        cart.getItems().add(item1);
+        cart.getItems().add(item2);
+
+        userTest.setCart(cart);
+
+        service.cleanCart(userTest);
+
+        verify(itemRepository, times(1)).deleteAll();
+        assertTrue(cart.getItems().isEmpty());
     }
 
     /**
      * Test of deleteItem method, of class CartService.
      */
     @Test
-    public void testDeleteItem() {
+    public void testDeleteItemExistingProduct() {
+        Cart cart = new Cart(userTest);
+        CartItem itemExpected = new CartItem();
+        Product product = new Product(1, "P1", "anything", 100.0, "anyImg");
+        itemExpected.setProduct(product);
+        itemExpected.setCart(cart);
+        userTest.setCart(cart);
+        when(itemRepository.findByProductId(product.getId())).thenReturn(Optional.of(itemExpected));
+
+        CartItem itemReturned = service.deleteItem(product, sessionControllerMock);
+
+        verify(itemRepository, times(1)).deleteByProductId(any(Integer.class));
+        assertFalse(userTest.getCart().getItems().contains(itemExpected));
+        assertEquals(itemExpected, itemReturned);
+    }
+
+    @Test
+    public void testDeleteItemNonexistentProduct() {
+        Cart cart = new Cart(userTest);
+        Product product = new Product(1, "P1", "anything", 100.0, "anyImg");
+        userTest.setCart(cart);
+        when(itemRepository.findByProductId(product.getId())).thenReturn(Optional.empty());
+
+        // Act
+        CartItem itemReturned = service.deleteItem(product, sessionControllerMock);
+        
+        assertNull(itemReturned);
     }
 
     /**
@@ -133,6 +207,34 @@ public class CartServiceTest {
      */
     @Test
     public void testRemoveCartItem() {
+        Cart cart = new Cart(userTest);
+        CartItem itemToDelete = new CartItem();
+        Product product = new Product(1, "P1", "anything", 100.0, "anyImg");
+        itemToDelete.setProduct(product);
+        itemToDelete.setCart(cart);
+        cart.getItems().add(itemToDelete);
+        userTest.setCart(cart);
+
+        assertTrue(service.removeCartItem(userTest, itemToDelete));
+    }
+
+    @Test
+    public void testRemoveCartItemForNullCart() {
+        assertFalse(service.removeCartItem(userTest, null)); // Passando null como CartItem
+    }
+
+    @Test
+    public void testRemoveCartItemForNonexistingProduct() {
+        Cart cart = new Cart(userTest);
+        CartItem rightItem = new CartItem();
+        CartItem wrongItem = new CartItem();
+        Product rightProduct = new Product(1, "P1", "anything", 100.0, "anyImg");
+        rightItem.setProduct(rightProduct);
+        rightItem.setCart(cart);
+        cart.getItems().add(rightItem);
+        userTest.setCart(cart);
+
+        assertFalse(service.removeCartItem(userTest, wrongItem));
     }
 
     /**
@@ -140,6 +242,20 @@ public class CartServiceTest {
      */
     @Test
     public void testGetSubtotal() {
+        Cart cart = new Cart(userTest);
+        Product p1 = new Product(1, "P1", "anything", 100.0, "anyImg");
+        Product p2 = new Product(2, "P2", "anything", 200.0, "anyImg");
+        Product p3 = new Product(3, "P3", "anything", 400.0, "anyImg");
+        CartItem i1 = new CartItem(cart, p1, 1, p1.getPrice());
+        CartItem i2 = new CartItem(cart, p2, 2, p2.getPrice());
+        CartItem i3 = new CartItem(cart, p3, 3, p3.getPrice());
+        cart.getItems().addAll(Arrays.asList(i1, i2, i3));
+
+        userTest.setCart(cart);
+
+        double resultExcpected = (i1.getPrice() * i1.getQuantity()) + (i2.getPrice() * i2.getQuantity()) + (i3.getPrice() * i3.getQuantity());
+
+        assertEquals(resultExcpected, service.getSubtotal(sessionControllerMock));
     }
 
     /**
@@ -147,13 +263,51 @@ public class CartServiceTest {
      */
     @Test
     public void testCovertCartToOrder() {
+        Cart cart = new Cart(userTest);
+        Product p1 = new Product(1, "P1", "anything", 100.0, "anyImg");
+        Product p2 = new Product(2, "P2", "anything", 200.0, "anyImg");
+        CartItem i1 = new CartItem(cart, p1, 1, p1.getPrice());
+        CartItem i2 = new CartItem(cart, p2, 2, p2.getPrice());
+        cart.getItems().addAll(Arrays.asList(i1, i2));
+
+        OrderItem itemP1 = new OrderItem(null, i1.getProduct(), i1.getQuantity(), i1.getPrice());
+        OrderItem itemP2 = new OrderItem(null, i1.getProduct(), i1.getQuantity(), i1.getPrice());
+        OrderItem itemP3 = new OrderItem(null, i1.getProduct(), i1.getQuantity(), i1.getPrice());
+
+        userTest.setCart(cart);
+
+        // Act
+        Order orderReturned = service.covertCartToOrder(sessionControllerMock);
+        assertFalse(orderReturned.getOrderItems().isEmpty());
     }
 
     /**
      * Test of calculateInstallments method, of class CartService.
      */
     @Test
-    public void testCalculateInstallments() {
+    public void testCalculateInstallmentsForMultiplesOf20() {
+        double totalValue = 100.0;
+        int numInstallments = service.calculateInstallments(totalValue);
+        double installmentValue = totalValue / numInstallments;
+        assertTrue(installmentValue > 20.0);
+
+    }
+
+    @Test
+    public void testCalculateInstallmentsForNoMultiplesOf20() {
+        double totalValue = 543.99;
+        int numInstallments = service.calculateInstallments(totalValue);
+        double installmentValue = totalValue / numInstallments;
+        assertTrue(installmentValue > 20.0);
+
+    }
+
+    @Test
+    public void testCalculateInstallmentsForTotalEquals20() {
+        double totalValue = 20;
+        int numInstallments = service.calculateInstallments(totalValue);
+        double installmentValue = totalValue / numInstallments;
+        assertTrue(numInstallments == 1);
     }
 
 }
