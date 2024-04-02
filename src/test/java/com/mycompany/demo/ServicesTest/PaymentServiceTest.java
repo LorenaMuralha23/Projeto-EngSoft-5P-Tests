@@ -2,11 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
-package com.mycompany.demo.services;
+package com.mycompany.demo.ServicesTest;
 
 import com.mycompany.demo.entities.Order;
 import com.mycompany.demo.entities.Payment;
 import com.mycompany.demo.repositories.PaymentRepository;
+import com.mycompany.demo.services.PaymentService;
 import java.time.Instant;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
